@@ -13,7 +13,7 @@ ubuntu|AWS|EC2|Stable|Ubuntu Basic
 To try out creating your own infrastructure using code, either clone this project using git or download it to your local machine and try it out.
 
 ```bash
-ubuntu@ubuntu:~$git clone http://github.com/upalepu/<TBD>
+ubuntu@ubuntu:~$git clone https://github.com/upalepu/iac.git
 ```
 
 ---
