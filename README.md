@@ -1,11 +1,11 @@
 # Infrastructure as Code
-Having the ability to create your own virtual data center with just a couple of minutes of configuration is a very powerful and convenient mechanism. It can be helpful for creating demo environments, testing validation and even production environments with careful design. More importantly, being able to scale up/down your infrastructure at will, automatically and even take it all down is very coest efficient, convenient and powerful. This project is an attempt at creating a few sample environments in AWS using Terraform and bash scripting. For a brief synopsis on the folder structure and how to use Terraform, click [here.](#tfo)     
+Having the ability to create your own virtual data center in just a couple of minutes of is a very powerful feeling. It can be helpful for creating demo environments, testing validation and even production environments with careful design. More importantly, being able to scale up/down your infrastructure at will, automatically and even take it all down is very cost efficient, convenient and powerful. This project is an attempt at creating a few sample environments in AWS using Terraform and bash scripting. For a brief synopsis on the folder structure and how to use Terraform, click [here.](#tfo)     
 
-The table below lists the various artifacts which can be created using the resources in this folder. Instructions for using each type of artifact are also provided. 
+The table below lists the various cloud infrastructure artifacts which can be created using the resources in this folder. Instructions for using each type of artifact are also provided. 
 
 Name|Cloud Platform|Artifact|Status|Description
 ---|---|---|---|---
-ubuntu|AWS|EC2|Stable|Ubuntu Basic
+ubuntu|AWS|EC2|Stable|Ubuntu linux EC2 machine in isolated VPC with SSH access 
 
 [comment]: # (Upcoming items)
 [comment]: # (windows|AWS|EC2|Not Done|Windows Server Basic|)
