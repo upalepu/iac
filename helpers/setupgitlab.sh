@@ -1,7 +1,7 @@
 #!/bin/bash
 # This is a script to install gitlab.
 #
-if [[ "${1:-}" == "" ]]; then POSTFIXSERVERDOMAIN="palepuweb.org"; else POSTFIXSERVERDOMAIN="$1"; fi 
+if [[ "${1:-}" == "" ]]; then POSTFIXSERVERDOMAIN="www.example.com"; else POSTFIXSERVERDOMAIN="$1"; fi 
 POSTFIXMAILERTYPE="Internet Site"
 sudo apt-get -y update
 sudo apt-get install -y ca-certificates curl openssh-server 
