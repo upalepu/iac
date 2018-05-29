@@ -69,7 +69,7 @@ DESCRIPTION
 - ***project*** needs to **only** be set if the default value is not acceptable. 
 - Default ***ec2_type*** is *t2.small*. If the machine will be used as a server, a *t2.medium* may be a better choice. For additional AWS machine types check [here.](https://aws.amazon.com/ec2/instance-types/) 
 - The ***count*** variable needs to be set **only** if more than one EC2 machine needs to be created.   
-- ***platform*** is *linux" so nothing to be done here.
+- ***platform*** is *linux* so nothing to be done here.
 - For ubuntu 16.04, nothing has to be set on the ***ver*** variable. If ubuntu 14.04 or ubuntu 12.04 is needed, you can change this to "14" or "12" respectively. 
 - The ***db*** variable is used only for windows EC2 machines, so it can be left alone. 
 - The other variables can be left to their default values.
