@@ -115,7 +115,7 @@ variable "files_to_copy" {
 The following is a list of maps for files to copy to the EC2
 DESCRIPTION
     default = [
-        { source = "", destination = "" }, 
+        { source = "", destination = "" }
     ]
 }
 variable "remote_commands" {
@@ -125,6 +125,6 @@ The following list of commands will be executed in the EC2 machine after it is c
 DESCRIPTION
     default = [
         "sudo apt-get -y update",
+        "sudo apt-get -y upgrade",
     ]
 }
-
