@@ -19,8 +19,11 @@ ubuntu@ubuntu:~$git clone https://github.com/upalepu/iac.git
 ---
 ## *General pre-requisites* 
 
-1) You will need an AWS Account. If you don't have an account, sign up for free [here.](https://aws.amazon.com/free/)    
-2) You will need ***terraform*** installed on your machine. Check out details [here.](#tii)
+1) You will need an AWS Account. If you don't have an account, sign up for free [here.](https://aws.amazon.com/free/)   
+2) You will also need your AWS ***Access Key Id*** and ***Secret Access Key***. Check out details on how to get these [here.](https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/setup-credentials.html)
+If you don't have these or lost them you can recreate these. Check out details [here.](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey)    
+3) You will need the AWS Commandline Interface (CLI) installed on your local machine. For a quick way to install the AWS CLI on your local machine, follow the instructions [here.](#awsclii)       
+4) You will need ***terraform*** installed on your local machine. Check out details [here.](#tii)
 
 ---
 
@@ -81,7 +84,10 @@ ubuntu@ubuntu:~/iac/ubuntu$ terraform init
 ```bash
 ubuntu@ubuntu:~/iac/ubuntu$ terraform apply
 ```
-- That's it, your AWS EC2 ubuntu machine is now created and ready for use. To verify that the machine is available, SSH into the machine from a bash command prompt and verify that the machine is up and running. 
+- That's it! Your AWS EC2 ubuntu machine is now created and ready for use. To verify that the machine is available, SSH into the machine from a bash command prompt and verify that the machine is up and running. 
+
+### Summary
+Creating an ubuntu EC2 machine was as simple as specifying a few configuration parameters in the ubuntu-vars.tf file and running terraform. Terraform does the hard lifting and creates the EC2 machines.  
 
 ---
 
@@ -124,23 +130,53 @@ If you are using a local 64-bit (x86) Linux machine (not ARM), you can do the fo
 
 ### Quick way to install terraform on a 64-bit Linux machine  
 - Open a bash shell and switch to the ***helpers*** folder
-- Run the ***setupterraform.sh*** bash script
-  - This script will check for a terraform binary in ***/usr/local/bin*** and if existing, removes it. Then it will figure out and grab the latest version of the 64-bit Linux version of ***terraform***. It will then unzip the file and copy the binary to the ***/usr/local/bin*** folder and run it to check the version. If all goes well, a message indicating success will get displayed along with the version of terraform installed.
-  
+- Check to see if ***setupterraform.sh*** can be executed by running ***ls -l***
+  - If it is not, make it executable using the following command
+```bash
+ubuntu@ubuntu:~/iac/helpers$ chmod +x ./setupterraform.sh
+```
+- Run the ***setupterraform.sh*** bash script as shown below
 ```bash
 ubuntu@ubuntu:~/iac/helpers$ ./setupterraform.sh
 ```
+  - This script will check for a terraform binary in ***/usr/local/bin*** and if existing, removes it. Then it will figure out and grab the latest version of the 64-bit Linux version of ***terraform***. It will then unzip the file and copy the binary to the ***/usr/local/bin*** folder and run it to check the version. If all goes well, a message indicating success will get displayed along with the version of ***terraform*** installed. 
 If you want to install terraform to a different location, then edit the ***setupterraform.sh*** file and change the following variable ***TERRAFORMINSTALLLOCATION*** to point to your new location. The code snippet below shows the variable location in the file. 
 
 ```bash
 #!/bin/bash
 # This script file sets up the 64 bit linux version of terraform on a linux machine.
 # It checks for the latest version from the hashi corp download html page
-# Then sues wget to download the zip file and unzips it. 
+# Then uses wget to download the zip file and unzips it. 
 #
 TERRAFORMINSTALLLOCATION="/usr/local/bin"
-if [[ -e "$TERRAFORMINSTALLLOCATION" ]]; then
-    echo -e "Removing existing terraform ..."
-    sudo rm $TERRAFORMINSTALLLOCATION/terraform &>/dev/null
-fi 
 ```
+---
+## <a name="awsclii"></a>*Quick way to install AWS CLI*
+- Open a bash shell and switch to the ***helpers*** folder
+- Check to see if ***setupawscli.sh*** can be executed by running ***ls -l***
+  - If it is not, make it executable using the following command
+```bash
+ubuntu@ubuntu:~/iac/helpers$ chmod +x ./setupawscli.sh
+```
+- Run the ***setupawscli.sh*** bash script as shown below. Note that this script expects you to provide the AWS ***Access Key Id*** and the ***Secret Access Key*** on the command line as shown below. The the ***id*** is a 20 character ALL CAPS string and the ***secret*** is a 40 character alpha-numeric-specialcharacter string. Note that the values below are random and not real. 
+```bash
+ubuntu@ubuntu:~/iac/helpers$ ./setuptawscli.sh id=ABCDEFGHIJKLMNOPQRST secret=ABC76+sdasd98sd/8hsdgTHY/asdj86HGASGAHSY
+```
+  - This script will check if AWS CLI is installed on the local machine and if not, it will install it. It will use the supplied AWS ***Access Key Id*** and the ***Secret Access Key*** and configure the CLI. This will allow ***terraform*** to work correctly.  
+---
+## *Troubleshooting*
+
+- When you run ***terraform apply***, if you get any errors like the following:
+
+```bash
+Error: Error applying plan:
+
+1 error(s) occurred:
+
+* module.myvpc.aws_vpc.vpc: 1 error(s) occurred:
+
+* aws_vpc.vpc: Error creating VPC: UnauthorizedOperation: You are not authorized to perform this operation.
+        status code: 403, request id: c80e8354-a890-4fff-96a7-55cf301c156d
+```
+Make sure you have setup your AWS credentials on the machine you are running ***terraform***. Check out details on how to do this [here.](https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/setup-credentials.html)
+
