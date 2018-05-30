@@ -179,4 +179,4 @@ Error: Error applying plan:
         status code: 403, request id: c80e8354-a890-4fff-96a7-55cf301c156d
 ```
 Make sure you have setup your AWS credentials on the machine you are running ***terraform***. Check out details on how to do this [here.](https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/setup-credentials.html)
-
+Alternatively, if you'd like to try the quick way, check out the details [here.](#awsclii)
