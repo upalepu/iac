@@ -10,6 +10,8 @@ trap finish EXIT
 AWS_CFG_DIR="$HOME/.aws"
 AWS_CFG_FILE="$AWS_CFG_DIR/config"
 AWS_CREDENTIALS_FILE="$AWS_CFG_DIR/credentials"
+AWS_REGION="us-east-1"
+AWS_OUTPUT="json"
 SCRIPTNAME=${BASH_SOURCE[0]##*/}	# Strip off the path & get scriptname.
 
 if (($# < 2)); then 
@@ -48,16 +50,29 @@ fi
 echo -e "AWS Command Line Interface is installed."
 echo -e "Creating AWS CLI configuration ..."
 
-if [[ ! -d "$AWS_CFG_DIR" ]]; then mkdir "$AWS_CFG_DIR"; fi
-if [[ -e "$AWS_CFG_FILE" ]]; then mv "$AWS_CFG_FILE"  "$AWS_CFG_FILE-$(date +%m%d%y%H%M%S%N)"; fi
-if [[ -e "$AWS_CREDENTIALS_FILE" ]]; then mv "$AWS_CREDENTIALS_FILE"  "$AWS_CREDENTIALS_FILE-$(date +%m%d%y%H%M%S%N)"; fi
+if [[ ! -d "$AWS_CFG_DIR" ]]; then
+    echo -e "AWS CLI configration is not present. Creating ..."
+    mkdir "$AWS_CFG_DIR"
+fi
+if [[ -e "$AWS_CFG_FILE" ]]; then
+    UNIQUEID=$(date +%m%d%y-%H%M%S-%N)
+    mv "$AWS_CFG_FILE"  "$AWS_CFG_FILE-$UNIQUEID" 
+    echo -e "AWS CLI configuration exists. Saving to [$AWS_CFG_FILE-$UNIQUEID]"
+fi
+if [[ -e "$AWS_CREDENTIALS_FILE" ]]; then 
+    UNIQUEID=$(date +%m%d%y-%H%M%S-%N)
+    mv "$AWS_CREDENTIALS_FILE"  "$AWS_CREDENTIALS_FILE-$$UNIQUEID"
+    echo -e "AWS CLI credentials exist. Saving to [$AWS_CREDENTIALS_FILE-$UNIQUEID]"
+fi
 
 echo -e "[default]" >> "$AWS_CFG_FILE"
-echo -e "output = json" >> "$AWS_CFG_FILE"
-echo -e "region = us-east-1" >> "$AWS_CFG_FILE"
+echo -e "output = $AWS_OUTPUT" >> "$AWS_CFG_FILE"
+echo -e "region = $AWS_REGION" >> "$AWS_CFG_FILE"
+echo -e "Created [$AWS_CFG_FILE] with [output=$AWS_OUTPUT] & [region=$AWS_REGION]."
 
 echo -e "[default]" >> "$AWS_CREDENTIALS_FILE"
 echo -e "aws_access_key_id = $AWS_ACCESS_KEY_ID" >> "$AWS_CREDENTIALS_FILE"
 echo -e "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY" >> "$AWS_CREDENTIALS_FILE"
+echo -e "Created [$AWS_CREDENTIALS_FILE] with supplied id & secret."
 
 echo -e "AWS CLI configuration completed!"
