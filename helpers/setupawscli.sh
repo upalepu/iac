@@ -17,6 +17,8 @@ SCRIPTNAME=${BASH_SOURCE[0]##*/}	# Strip off the path & get scriptname.
 if (($# < 2)); then 
     echo -e "Usage:"
     echo -e "\t$SCRIPTNAME id=<AWS Access Key Id> secret=<AWS Secret Access Key>"
+    echo -e "Valid id will look like this -> ABCDEFGHIJKLMNOPQRST"
+    echo -e "Valid secret will look like this -> ABC76+sdasd98sd/8hsdgTHY/asdj86HGASGAHSY"
     exit 1
 fi
 AWS_ACCESS_KEY_ID=${1#*=}
@@ -29,7 +31,7 @@ fi
 AWS_SECRET_ACCESS_KEY=${2#*=}
 if ((${#AWS_SECRET_ACCESS_KEY} != 40)); then 
     echo -e "[$2] does not appear to be a valid AWS Secret Access Key"
-    echo -e "Valid key will look like this -> ABC76+sdasd98sd/8hsdgTHY/asdj86HGASGAHSY"
+    echo -e "Valid secret will look like this -> ABC76+sdasd98sd/8hsdgTHY/asdj86HGASGAHSY"
     exit 1 
 fi
 
