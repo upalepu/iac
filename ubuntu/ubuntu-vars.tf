@@ -11,7 +11,7 @@ This is the key file that AWS creates and includes in every EC2 machine.
 Linux Example: "~/.ssh/my_aws_public_key.pub"
 NOTE: This only is required for Linux machines.
 DESCRIPTION
-	default = ""
+	default = "~/devp/aws/keys/upalepuEC2Key.pub"
 }
 variable "private_key_path" {
   	description = <<DESCRIPTION
@@ -20,14 +20,14 @@ This file path should be supplied so Terraform can login to the AWS
 EC2 machine and do remote administration tasks.
 Linux Example: "~/.ssh/my_aws_private_key.pem"
 DESCRIPTION
-	default = ""
+	default = "~/devp/aws/keys/upalepuEC2Key.pem"
 }
 variable "key_name" {
   	description = <<DESCRIPTION
 This is the name of the Key Pair in your AWS account that you are using.
 You will be able to find this in the AWS console under "Key Pairs". 
 DESCRIPTION
-	default = ""
+	default = "upalepuEC2Key"
 }
 variable "region" {
   	description = "This is the AWS region where you want to create your Virtual Private Cloud and the virtual EC2 machines." 
@@ -125,6 +125,5 @@ The following list of commands will be executed in the EC2 machine after it is c
 DESCRIPTION
     default = [
         "sudo apt-get -y update",
-        "sudo apt-get -y upgrade",
     ]
 }
