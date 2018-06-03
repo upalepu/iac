@@ -230,3 +230,23 @@ If the above status keeps repeating itself for several minutes, it should eventu
 
 ---
 
+When you run ***terraform apply***, if you get the following error:
+
+```bash
+Error: Error applying plan:
+
+1 error(s) occurred:
+
+* aws_iam_user.user: 1 error(s) occurred:
+
+* aws_iam_user.user: Error creating IAM User kops: EntityAlreadyExists: User with name kops already exists.
+        status code: 409, request id: 0ecebb16-6631-11e8-af7e-cbdd9950e9ec
+
+Terraform does not automatically rollback in the face of errors.
+Instead, your Terraform state file has been partially updated with
+any resources that successfully completed. Please address the error
+above and apply again to incrementally change your infrastructure.
+```
+This happens if you already have a user account with the name kops in your AWS account. Go to the AWS console and delete that account manually and then try again. 
+
+---
