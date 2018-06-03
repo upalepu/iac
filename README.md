@@ -5,7 +5,9 @@ The table below lists the various cloud infrastructure artifacts which can be cr
 
 Name|Cloud Platform|Artifact|Status|Description
 ---|---|---|---|---
-ubuntu|AWS|EC2|Stable|Ubuntu linux EC2 machine in isolated VPC with SSH access 
+ubuntu|AWS|EC2|Stable|Ubuntu EC2 machine in isolated VPC with SSH access 
+kubernetes|AWS|AWS Setup|Testing|Sets up AWS for running kubernetes cluster 
+iacec2|AWS|EC2|Testing|Ubuntu EC2 in isolated VPC for developing/testing iac/terraform/kubernetes 
 
 [comment]: # (Upcoming items)
 [comment]: # (windows|AWS|EC2|Not Done|Windows Server Basic|)
