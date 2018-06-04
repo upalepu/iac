@@ -125,8 +125,10 @@ The following list of commands will be executed in the EC2 machine after it is c
 DESCRIPTION
     default = [
         "sudo apt-get -y update",
+        "sudo apt-get install -y jq",
         "git clone https://github.com/upalepu/iac.git",
         "cd $HOME/iac/helpers",
-        "./setupterraform.sh"
+        "chmod +x *.sh",
+        "./setupterraform.sh",
     ]
 }
