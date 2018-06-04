@@ -236,11 +236,8 @@ When you run ***terraform apply***, if you get the following error:
 
 ```bash
 Error: Error applying plan:
-
 1 error(s) occurred:
-
 * aws_iam_user.user: 1 error(s) occurred:
-
 * aws_iam_user.user: Error creating IAM User kops: EntityAlreadyExists: User with name kops already exists.
         status code: 409, request id: 0ecebb16-6631-11e8-af7e-cbdd9950e9ec
 
@@ -252,3 +249,15 @@ above and apply again to incrementally change your infrastructure.
 This happens if you already have a user account with the name kops in your AWS account. Go to the AWS console and delete that account manually and then try again. 
 
 ---
+
+When you run ***terraform apply***, if you get the following error:
+
+```bash
+data.aws_route53_zone.hz: Refreshing state...
+Error: Error refreshing state: 1 error(s) occurred:
+* data.aws_route53_zone.hz: 1 error(s) occurred:
+* data.aws_route53_zone.hz: data.aws_route53_zone.hz: no matching Route53Zone found
+```
+This happens if you have not provided a valid hosted zone name in the ***kubernetes-vars.tf*** file. Check the name of the hosted zone in your AWS Route53 console and provide it in the location specified in the file.   
+
+----
