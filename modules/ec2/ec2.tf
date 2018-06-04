@@ -154,6 +154,7 @@ locals {
 }
 # Used for provisioning of commands. Currently on windows systems we need password.  
 resource "null_resource" "provisioning" {
+    depends_on = [ "aws_instance.ec2", "null_resource.file_copy" ]
     count = "${local.provision_ec2}"    # This will be > 0 if Linux & 0 if Windows
     triggers {
         provisioning_ec2_id = "${element(aws_instance.ec2.*.id,count.index)}"
@@ -167,7 +168,7 @@ resource "null_resource" "provisioning" {
     }
     provisioner "remote-exec" {
         inline = "${var.remote_commands}"
-        on_failure = "continue" 
+        //on_failure = "continue" 
     }
 }
 
@@ -179,6 +180,7 @@ locals {
 }
 # Used for copying files to the EC2. Currently we use this on Linux only.  
 resource "null_resource" "file_copy" {
+    depends_on = [ "aws_instance.ec2" ]
     count = "${local.filecopy_count}"    # This will be > 0 if we need to copy files to the remote resource
     triggers {
         provisioning_ec2_id = "${element(aws_instance.ec2.*.id,count.index)}"
