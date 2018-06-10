@@ -63,7 +63,7 @@ if [[ -e "$AWS_CFG_FILE" ]]; then
 fi
 if [[ -e "$AWS_CREDENTIALS_FILE" ]]; then 
     UNIQUEID=$(date +%m%d%y-%H%M%S-%N)
-    mv "$AWS_CREDENTIALS_FILE"  "$AWS_CREDENTIALS_FILE-$$UNIQUEID"
+    mv "$AWS_CREDENTIALS_FILE"  "$AWS_CREDENTIALS_FILE-$UNIQUEID"
     echo -e "AWS CLI credentials exist. Saving to [$AWS_CREDENTIALS_FILE-$UNIQUEID]"
 fi
 
