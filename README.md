@@ -260,4 +260,17 @@ Error: Error refreshing state: 1 error(s) occurred:
 ```
 This happens if you have not provided a valid hosted zone name in the ***kubernetes-vars.tf*** file. Check the name of the hosted zone in your AWS Route53 console and provide it in the location specified in the file.   
 
-----
+---
+
+When you run ***terraform apply***, if you get the following error:
+
+```bash
+Error: Error refreshing state: 1 error(s) occurred:
+
+* provider.aws: No valid credential sources found for AWS Provider.
+        Please see https://terraform.io/docs/providers/aws/index.html for more information on
+        providing credentials for the AWS Provider
+```
+This happens if you tried to run the kubernetes cluster creation before setting up your aws credentials on the machine. To address this you can change to the ***iac/helpers*** directory and run the ***setupawscli.sh*** program. It requires two command line params, your AWS Access Id and secret access key.
+
+---
