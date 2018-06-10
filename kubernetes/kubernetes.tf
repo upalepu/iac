@@ -74,6 +74,7 @@ resource "aws_s3_bucket" "s3b" {
     bucket = "${replace(var.k8scfg["parm_domain"],"/\\..*/","")}-${var.k8scfg["tags_project"]}-state"
     acl    = "private"
     force_destroy = "true"
+    region = "${var.k8scfg["parm_region"]}"
     tags {
         Name = "${var.k8scfg["tags_project"]}-s3b"
         Project = "${var.k8scfg["tags_project"]}"
