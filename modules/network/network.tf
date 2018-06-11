@@ -1,4 +1,9 @@
 # Create a VPC to launch our instances into
+variable "security_group_description" {
+	description = "Description of the security group"
+	default = "Demo Security Group - demo-sg"
+}
+
 variable "security_group_name" {
 	description = "Name of the security group"
 	default = "demo-sg"
@@ -45,7 +50,7 @@ resource "aws_subnet" "subnet" {
 # Our security group to access the instances over SSH, RDP and HTTP
 resource "aws_security_group" "security_group" {
 	name        = "${var.security_group_name}"
-	description = "ARI Staging Environment Security Group"
+	description = "${var.security_group_description}"
 	vpc_id      = "${aws_vpc.vpc.id}"
     tags {
         Project = "${var.project}"
