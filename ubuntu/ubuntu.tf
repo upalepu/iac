@@ -10,6 +10,7 @@ module "myvpc" {
 	source = "../modules/network"
     project = "${var.project}"
     security_group_name = "${var.project}-sg"
+    security_group_description = "${var.project} Security Group"
 }
 module "ubuntu" {
     source = "../modules/ec2"
