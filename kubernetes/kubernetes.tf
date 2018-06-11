@@ -3,6 +3,18 @@ provider "aws" {
     region = "${var.k8scfg["parm_region"]}"
 	version = "~> 1.6"
 }
+
+locals {
+    _tfstate_bucket = "${replace(var.k8scfg["parm_domain"],"/\\..*/","")}-${var.k8scfg["tags_project"]}-terraform"
+
+}
+terraform {
+    backend "s3" {
+        bucket = "${local._tfstate_bucket}" 
+        key = "${local._tfstate_bucket}/state"
+        region = "${var.k8scfg["parm_region"]}"
+    }
+}
 variable "gpolicy_arn" {
     type = "list"
     description = "List of group policy arns needed by the Kubernetes group"
