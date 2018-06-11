@@ -53,7 +53,7 @@ echo -e "AWS Command Line Interface is installed."
 echo -e "Creating AWS CLI configuration ..."
 
 if [[ ! -d "$AWS_CFG_DIR" ]]; then
-    echo -e "AWS CLI configration is not present. Creating ..."
+    echo -e "AWS CLI configuration is not present. Creating ..."
     mkdir "$AWS_CFG_DIR"
 fi
 if [[ -e "$AWS_CFG_FILE" ]]; then
