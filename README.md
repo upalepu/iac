@@ -258,7 +258,7 @@ Error: Error refreshing state: 1 error(s) occurred:
 * data.aws_route53_zone.hz: 1 error(s) occurred:
 * data.aws_route53_zone.hz: data.aws_route53_zone.hz: no matching Route53Zone found
 ```
-This happens if you have not provided a valid hosted zone name in the ***kubernetes-vars.tf*** file. Check the name of the hosted zone in your AWS Route53 console and provide it in the location specified in the file.   
+This happens if you have not provided a valid domain name in the ***kubernetes-vars.tf*** file. Check the name of the hosted zone in your AWS Route53 console and set it in the  ***parm_domain*** key of the ***k8scfg*** variable.   
 
 ---
 
