@@ -49,6 +49,7 @@ data "aws_route53_zone" "hz" {
     name = "${var.k8scfg["parm_domain"]}"
 }
 resource "aws_route53_zone" "subhz" {
+    depends_on = [ "aws_iam_user.user" ] 
     name = "${var.k8scfg["parm_subdomain"]}.${var.k8scfg["parm_domain"]}"
     comment = "${var.k8scfg["parm_comment"]}"
     tags {
@@ -58,11 +59,12 @@ resource "aws_route53_zone" "subhz" {
     }
 }
 resource "aws_route53_record" "subhz_nsrecords" {
-  zone_id = "${data.aws_route53_zone.hz.zone_id}"
-  name    = "${var.k8scfg["parm_subdomain"]}.${var.k8scfg["parm_domain"]}"
-  type    = "NS"
-  ttl     = "300"
-  records = ["${values(data.external.subhz_nsrecords.result)}"]
+    depends_on = [ "aws_iam_user.user" ] 
+    zone_id = "${data.aws_route53_zone.hz.zone_id}"
+    name    = "${var.k8scfg["parm_subdomain"]}.${var.k8scfg["parm_domain"]}"
+    type    = "NS"
+    ttl     = "300"
+    records = ["${values(data.external.subhz_nsrecords.result)}"]
 }
 data "external" "subhz_nsrecords" {
     program = [ "/bin/bash", "nsrecords.sh" ] 
@@ -71,6 +73,7 @@ data "external" "subhz_nsrecords" {
     }
 }
 resource "aws_s3_bucket" "s3b" {
+    depends_on = [ "aws_iam_user.user" ] 
     bucket = "${replace(var.k8scfg["parm_domain"],"/\\..*/","")}-${var.k8scfg["tags_project"]}-state"
     acl    = "private"
     force_destroy = "true"
@@ -99,6 +102,7 @@ module "awscfg" {
 
 resource "null_resource" "kops" {
     depends_on = [
+        "aws_iam_user.user",
         "aws_iam_access_key.cak",
         "aws_s3_bucket.s3b",
         "aws_route53_record.subhz_nsrecords",    
@@ -130,6 +134,7 @@ CMD
 
 resource "null_resource" "kubectl" {
     depends_on = [
+        "aws_iam_user.user",
         "null_resource.kops",
     ]
     triggers {
@@ -157,6 +162,61 @@ CMD
     }
 }
 
+/*
+resource "null_resource" "k8scluster" {
+    depends_on = [
+        "aws_iam_user.user",
+        "null_resource.kops",
+    ]
+    triggers {
+        k8sc_name = "${var.k8scfg["parm_subdomain"]}.${var.k8scfg["parm_domain"]}"
+        k8sc_s3b_name = "${aws_s3_bucket.s3b.id}"
+        k8sc_ak_id = "${aws_iam_access_key.cak.id}"
+        k8sc_ak_secret = "${aws_iam_access_key.cak.secret}"
+        k8sc_ak_user = "${aws_iam_access_key.cak.user}"
+    }
+    
+    provisioner "local-exec" {
+        when = "create"
+        # Using heredoc syntax for running multiple cmds
+        # First we copy the export commands for the env variables for use by kops into the .bashrc file. 
+        # Then we copy the export commands for the env variables for the AWS kops user account. into the .bashrc file.  
+        # Then we create a public key for ssh access by kops to the various kops systems. 
+        # admin is the user name required for Debian. (Seems like kops defaults to using debian for its cluster machines)
+        #   
+        command = <<CMD
+if [[ ! -e ~/.bashrc ]]; then touch ~/.bashrc; fi
+echo -e "export NAME=${null_resource.k8scluster.triggers.k8sc_name}" >> ~/.bashrc
+echo -e "export KOPS_STATE_STORE=${null_resource.k8scluster.triggers.k8sc_s3b_name}" >> ~/.bashrc
+echo -e "export AWS_PROFILE=${null_resource.k8scluster.triggers.k8sc_ak_user}" >> ~/.bashrc 
+echo -e "export AWS_ACCESS_KEY_ID=${null_resource.k8scluster.triggers.k8sc_ak_id}" >> ~/,bashrc
+echo -e "export AWS_SECRET_ACCESS_KEY=${null_resource.k8scluster.triggers.k8sc_ak_secret}" >> ~/.bashrc
+ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa; if (($?)); then exit 1; fi
+kops create secret --name ${null_resource.k8scluster.triggers.k8sc_name} sshpublickey admin -i ~/.ssh/id_rsa.pub; if (($?)); then exit 1; fi
+kops create cluster \
+--name=${null_resource.k8scluster.triggers.k8sc_name} \
+--state=${null_resource.k8scluster.triggers.k8sc_s3b_name} \
+--zones=${var.k8scfg.parm_region}a \
+--node-count=${var.k8scfg.parm_nodes} \
+--node-size=${var.k8scfg.parm_nodetype} \
+--master-size=${var.k8scfg.parm_mastertype} \
+--dns-zone=${null_resource.k8scluster.triggers.k8sc_name}
+if (($?)); then exit 1; fi
+CMD
+        interpreter = [ "/bin/bash", "-c" ] 
+    }
+
+    # Unset the exported variables on destroy 
+    provisioner "local-exec" {
+        when = "destroy"
+        command = <<CMD
+unset NAME; unset KOPS_STATE_STORE
+
+CMD
+        interpreter = [ "/bin/bash", "-c" ]
+    }
+}
+*/
 output "k8scfg" { 
     value = {
         g_name = "${aws_iam_group.group.name}" 
