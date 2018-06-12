@@ -184,6 +184,7 @@ resource "null_resource" "k8scluster" {
         # First we copy the export commands for the env variables for use by kops into the .bashrc file. 
         # Then we copy the export commands for the env variables for the AWS kops user account. into the .bashrc file.  
         # Then we create a public key for ssh access by kops to the various kops systems. 
+        # NOTE: kops assumes a key-pair id_rsa in the .ssh directory. So the ssh-keygen cmd is important.  
         # admin is the user name required for Debian. (Seems like kops defaults to using debian for its cluster machines)
         #   
         command = <<CMD
@@ -194,8 +195,8 @@ echo -e "export AWS_PROFILE=${null_resource.k8scluster.triggers.k8sc_ak_user}" >
 echo -e "export AWS_ACCESS_KEY_ID=${null_resource.k8scluster.triggers.k8sc_ak_id}" >> ~/,bashrc
 echo -e "export AWS_SECRET_ACCESS_KEY=${null_resource.k8scluster.triggers.k8sc_ak_secret}" >> ~/.bashrc
 ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa; if (($?)); then exit 1; fi
-kops create secret --name ${null_resource.k8scluster.triggers.k8sc_name} sshpublickey admin -i ~/.ssh/id_rsa.pub; if (($?)); then exit 1; fi
 kops create cluster \
+--cloud=aws \
 --name=${null_resource.k8scluster.triggers.k8sc_name} \
 --state=${null_resource.k8scluster.triggers.k8sc_s3b_name} \
 --zones=${var.k8scfg.parm_region}a \
@@ -213,7 +214,7 @@ CMD
         when = "destroy"
         command = <<CMD
 unset NAME; unset KOPS_STATE_STORE
-
+unset AWS_PROFILE; unset AWS_ACCESS_KEY_ID; unset AWS_SECRET_ACCESS_KEY
 CMD
         interpreter = [ "/bin/bash", "-c" ]
     }
