@@ -37,7 +37,7 @@ variable "project" {
     description = <<DESCRIPTION
 This variable is used to tag all AWS resources in case you need to search for them using the AWS Console or CLI
 DESCRIPTION
-    default = "demo-ubuntu"
+    default = "demo-iacec2"
 }
 variable "ec2_type" {
     description = <<DESCRIPTION
