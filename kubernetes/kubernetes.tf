@@ -4,7 +4,7 @@ provider "aws" {
 	version = "~> 1.6"
 }
 
-terraform { backend "s3" {} }
+//terraform { backend "s3" {} }
 variable "gpolicy_arn" {
     type = "list"
     description = "List of group policy arns needed by the Kubernetes group"
