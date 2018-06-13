@@ -6,6 +6,51 @@
     region = "${var.region}"
 	version = "~> 1.6"
 }
+variable "gpolicy_arn" {
+    type = "list"
+    description = "List of group policy arns needed by the Kubernetes group"
+    default = [
+        "arn:aws:iam::aws:policy/AmazonEC2FullAccess",
+        "arn:aws:iam::aws:policy/AmazonRoute53FullAccess",
+        "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+        "arn:aws:iam::aws:policy/IAMFullAccess",
+        "arn:aws:iam::aws:policy/AmazonVPCFullAccess",
+    ]
+}
+resource "aws_iam_group" "group" {
+    name = "${var.k8scfg["parm_group"]}"
+    path = "/"
+}
+resource "aws_iam_group_policy_attachment" "gpa" {
+    depends_on = [ "aws_iam_group.group" ]
+    count = "${length(var.gpolicy_arn)}"
+    group = "${var.k8scfg["parm_group"]}"
+    policy_arn = "${element(var.gpolicy_arn, count.index)}"
+}
+resource "aws_iam_user" "user" {
+    name = "${var.k8scfg["parm_user"]}"
+    path = "/"
+    force_destroy = "${var.k8scfg["md_force_destroy"]}"
+}
+resource "aws_iam_group_membership" "gm" {
+    depends_on = [ "aws_iam_user.user", "aws_iam_group.group" ]
+    name = "${var.k8scfg["parm_group"]}"
+    group = "${var.k8scfg["parm_group"]}"
+    users = [
+        "${var.k8scfg["parm_user"]}",
+    ]
+}
+resource "aws_iam_access_key" "cak" {
+    depends_on = [ "aws_iam_user.user" ]
+    user = "${var.k8scfg["parm_user"]}"
+}
+locals {
+    # Creating command line for setting up aws cli with id= & secret=
+    # Note: This cmd assumes setupawscli is in current directory. 
+    _cmd = "${format("./setupawscli.sh id=%s secret=%s", "${aws_iam_access_key.cak.id}", "${aws_iam_access_key.cak.secret}")}"
+    _setupawsclicmd = [ "${local._cmd}" ]
+}
+
 module "myvpc" {
 	source = "../modules/network"
     project = "${var.project}"
@@ -30,7 +75,10 @@ module "iacec2" {
     root_volume = "${var.rootvol}"
     additional_volumes = "${var.additional_volumes}"
     files_to_copy = "${var.files_to_copy}"
-    remote_commands = "${var.remote_commands}"
+    # In addition to the commands specified in the vars file, we're also appending
+    # the setupawscli cmd. Note that it expects the pwd to be in the helpers
+    # directory.  
+    remote_commands = "${concat("${var.remote_commands}","${local._setupawsclicmd}")}"
 }
 
 output "iacec2_info" {
@@ -38,5 +86,14 @@ output "iacec2_info" {
     value = {
         ec2_info = "${module.iacec2.ec2_info}"
         network_info = "${module.myvpc.network_info}"
+        user_name = "${aws_iam_user.user.name}" 
+        user_uid = "${aws_iam_user.user.unique_id}"
+        user_arn = "${aws_iam_user.user.arn}"
+        group_name = "${aws_iam_group.group.name}" 
+        group_uid = "${aws_iam_group.group.unique_id}"
+        group_arn = "${aws_iam_group.group.arn}"
+        access_key_id = "${aws_iam_access_key.cak.id}"
+        access_key_user = "${aws_iam_access_key.cak.user}"
+        access_key_secret = "${aws_iam_access_key.cak.secret}"
     } 
 }
