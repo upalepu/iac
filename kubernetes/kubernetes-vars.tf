@@ -17,6 +17,5 @@ variable "k8scfg" {
         parm_nodes = "2"
         parm_nodetype = "t2.micro"
         parm_mastertype = "t2.micro"
-        md_force_destroy = "false" # Experimental. "true" if "user" has to be deleted even if it has non-terraform access keys.
     }
 }
