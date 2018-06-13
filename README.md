@@ -95,79 +95,12 @@ Creating an ubuntu EC2 machine was as simple as specifying a few configuration p
 ---
 
 ## <a name="tfo"></a>*Folder structure and Terraform usage overview*
-Terraform uses a declarative language to setup and configure infrastructure. Plugins for various providers (e.g. AWS, GCP, Azure etc.) are available which enable you to create infrastructure configurations which are agnostic to the specific provider. With well designed declaration files, Terraform enables highly scalable infrastructures. 
+For a brief overview ofthe folder structure in this project and Terrafrom click [here.](./docs/Terraform.md)
 
-### Folder structure
-The folder structure for this project is designed for modularity and is as follows:
-- ***iac*** (root folder)
-  - ***helpers*** (contains bash script files and other files used for remote commands)
-  - ***modules*** (contains reusable terraform modules)
-    - ***ec2*** (module for creating ec2 machines)
-    - ***network*** (module for creating the virtual private cloud in AWS)
-  - ***infrastructure folder*** (e.g. ubuntu - contains the main terraform and vars files for each type of machine infrastructure to be created )
-  - ***infrastructure folder*** 
-  - ***README.MD*** (This file)
-
-***helpers*** is a special folder which contains bash scripts that can be run remotely on the EC2 machines to provision them after creation. 
-
-The ***modules*** folder contains reusable modules (e.g. ec2, network etc.) which are called by the main terraform project declarations.
-
-Each of the ***infrastructure folders*** (e.g. ubuntu), contain the terraform declaration files. There can be multiple ***xxxxx.tf*** files in each of these folders. All files in a folder are processed when terraform is run. 
-
-It is conventional to have outputs and variables in separate files from the main declaration file. Reusable declarations can be isolated as modules and called from the main files. All the declaration files in this project have been designed to be flexible and allow several different machine configurations to be created by just changing the variables in the ***xxxxx-vars.tf*** files.
-
-### Creating infrastructure
-To create a machines or set of machines, switch to one of the infrastructure folders (e.g. ubuntu) and from a ***bash*** command line run ***terraform init***, followed by ***terraform apply***. The ***init*** command will make sure the required plug-ins are installed and properly setup. The ***apply*** command will analyze the terraform files in the folder and if no errors show up, will provide a plan for creating the infrastructure and request permission to create the infrastructure. There are ways to avoid this manual step, but initially it might be better to have this step so you can understand what infrastructure is going to be created. Once permission is granted, Terraform creates the infrastructure (e.g. EC2 machines, VPCs etc.) and will indicate the results when completed. 
-
-### Taking down infrastructure
-In order to remove the created infrastructure, you should type ***terraform destroy*** from within the same project folder. This command will analyze the "state" and then prompt the user for permission to execute. When you provide permission by typing "yes" at the prompt, Terraform will destroy all the created infrastructure. You can manually verify this from the AWS console if you want to. 
-
-NOTE: Terraform stores its "state" information locally in the same folder. The enterprise edition has a more advanced central storage method for the state and can be used well in production and with a team of developers. This central approach is not in scope for this project.    
-
-## <a name="tii"></a>*Terraform installation instructions*
-In order to use terraform as your infrastructure creator, it needs to be installed on the machine where you are going to run the terraform code.
-
-Terraform is a single binary file and can easily be downloaded and installed. It is available for many operating systems. Check out details [here.](https://www.terraform.io/downloads.html)
-
-If you are using a local 64-bit (x86) Linux machine (not ARM), you can do the following steps to install the 64-bit terraform binary to your machine. 
-
-### Quick way to install terraform on a 64-bit Linux machine  
-- Open a bash shell and switch to the ***helpers*** folder
-- Check to see if ***setupterraform.sh*** can be executed by running ***ls -l***
-  - If it is not, make it executable using the following command
-```bash
-ubuntu@ubuntu:~/iac/helpers$ chmod +x ./setupterraform.sh
-```
-- Run the ***setupterraform.sh*** bash script as shown below
-```bash
-ubuntu@ubuntu:~/iac/helpers$ ./setupterraform.sh
-```
-  - This script will check for a terraform binary in ***/usr/local/bin*** and if existing, removes it. Then it will figure out and grab the latest version of the 64-bit Linux version of ***terraform***. It will then unzip the file and copy the binary to the ***/usr/local/bin*** folder and run it to check the version. If all goes well, a message indicating success will get displayed along with the version of ***terraform*** installed. 
-If you want to install terraform to a different location, then edit the ***setupterraform.sh*** file and change the following variable ***TERRAFORMINSTALLLOCATION*** to point to your new location. The code snippet below shows the variable location in the file. 
-
-```bash
-#!/bin/bash
-# This script file sets up the 64 bit linux version of terraform on a linux machine.
-# It checks for the latest version from the hashi corp download html page
-# Then uses wget to download the zip file and unzips it. 
-#
-TERRAFORMINSTALLLOCATION="/usr/local/bin"
-```
 ---
 ## <a name="awsclii"></a>*Quick way to install AWS CLI*
-If you already have AWS CLI installed and configured properly, you don't need to do this step. Do this only if you have never installed AWS CLI on this machine.  
-- Open a bash shell and switch to the ***helpers*** folder
-- Check to see if ***setupawscli.sh*** can be executed by running ***ls -l***
-  - If it is not, make it executable using the following command
-```bash
-ubuntu@ubuntu:~/iac/helpers$ chmod +x ./setupawscli.sh
-```
-- Run the ***setupawscli.sh*** bash script as shown below. Note that this script expects you to provide the AWS ***Access Key Id*** and the ***Secret Access Key*** on the command line as shown below. The the ***id*** is a 20 character ALL CAPS string and the ***secret*** is a 40 character alpha-numeric-specialcharacter string. Note that the values below are random and not real. 
-```bash
-ubuntu@ubuntu:~/iac/helpers$ ./setuptawscli.sh id=ABCDEFGHIJKLMNOPQRST secret=ABC76+sdasd98sd/8hsdgTHY/asdj86HGASGAHSY
-```
-  - This script will check if AWS CLI is installed on the local machine and if not, it will install it. It will use the supplied AWS ***Access Key Id*** and the ***Secret Access Key*** and configure the CLI. This will allow ***terraform*** to work correctly.  
+For details on a quick way to install the AWS CLI click [here.](./docs/Awscliquickinstall.md)
+
 ---
 ## *Troubleshooting*
-
 For troubleshooting details click [here.](./docs/Troubleshooting.md)
