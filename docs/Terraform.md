@@ -30,5 +30,5 @@ In order to remove the created infrastructure, you should type ***terraform dest
 
 NOTE: Terraform stores its "state" information locally in the same folder. The enterprise edition has a more advanced central storage method for the state and can be used well in production and with a team of developers. This central approach is not in scope for this project.    
 
-## <a name="tii"></a>*Terraform installation instructions*
+## *Terraform installation instructions*
 For details on installing terraform click [here.](./Terraforminstall.md)
