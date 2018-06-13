@@ -13,8 +13,6 @@ variable "k8scfg" {
         parm_domain = "example.com"
         parm_subdomain = "kubernetes"
         parm_comment = "Kubernetes cluster subdomain" 
-        parm_group = "kopsgroup"
-        parm_user = "kops"
         parm_versioning = "false"
         parm_nodes = "2"
         parm_nodetype = "t2.micro"
