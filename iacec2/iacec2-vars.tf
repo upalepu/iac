@@ -132,3 +132,13 @@ DESCRIPTION
         "./setupterraform.sh",
     ]
 }
+
+variable "k8scfg" {
+    type = "map"
+    description = "AWS Configuration information for Kubernetes Cluster user name & group"
+    default = {
+        parm_group = "kopsgroup"
+        parm_user = "kops"
+        md_force_destroy = "false" # Experimental. "true" if "user" has to be deleted even if it has non-terraform access keys.
+    }
+}
