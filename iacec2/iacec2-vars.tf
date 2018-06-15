@@ -47,13 +47,6 @@ DESCRIPTION
     default = "t2.small"
 }
 
-variable "count" {
-    description = <<DESCRIPTION
-This variable is used to determine number of EC2 machines to be created.  
-DESCRIPTION
-    default = "1"
-}
-
 variable "platform" {
     description = <<DESCRIPTION
 This variable specified whether the platform is windows or linux. It's a custom variable which is used internally by the
