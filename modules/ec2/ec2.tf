@@ -228,3 +228,8 @@ output "ec2_info" {
         additional_volumes.sizes = "[${join(",",aws_ebs_volume.vebs.*.size)}]" 
     }
 }
+
+output "ec2_ip" {
+    description = "EC2 instance id."
+    value = "${aws_instance.ec2.*.public_ip}"
+}
