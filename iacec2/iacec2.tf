@@ -49,8 +49,22 @@ locals {
     # Note: This cmd assumes setupawscli is in current directory. 
     _cmd = "${format("./setupawscli.sh id=%s secret=%s", "${aws_iam_access_key.cak.id}", "${aws_iam_access_key.cak.secret}")}"
     _setupawsclicmd = [ "${local._cmd}" ]
+    _cmd2 = "${format("bucket = ${aws_s3_bucket.s3b.id}\nkey = ${aws_s3_bucket.s3b.id}/kubernetes\nregion = ${var.region}")}"
+    _bkend = "tfs3b.cfg" 
 }
 
+
+resource "aws_s3_bucket" "s3b" {
+    bucket = "${var.project}-terraform-state"
+    acl    = "private"
+    force_destroy = "true"
+    region = "${var.region}"
+    tags {
+        Name = "${var.project}-s3b"
+        Project = "${var.project}"
+    }
+    versioning { enabled = "true" }
+}
 module "myvpc" {
 	source = "../modules/network"
     project = "${var.project}"
@@ -58,7 +72,6 @@ module "myvpc" {
 }
 module "iacec2" {
     source = "../modules/ec2"
-    count = "${var.count}"
     project = "${var.project}"
     machine_name = "${var.project}-ec2"
     instance_type = "${var.ec2_type}"
@@ -81,9 +94,48 @@ module "iacec2" {
     remote_commands = "${concat("${var.remote_commands}","${local._setupawsclicmd}")}"
 }
 
+resource "null_resource" "bkendcfg" {
+    triggers {
+        s3b_id = "${aws_s3_bucket.s3b.id}"
+    }
+    
+    provisioner "local-exec" {
+        when = "create"
+        # Using heredoc syntax for running multiple cmds
+        # Inner EOL heredoc cmds is needed to output multi-line string to backend cfg file. 
+        command = <<CMD
+if [[ -e ./${local._bkend} ]]; then rm ./${local._bkend}; fi
+touch ./${local._bkend}
+cat >> ./${local._bkend} <<EOL 
+${local._cmd2}
+EOL
+CMD
+        interpreter = [ "/bin/bash", "-c" ] 
+    }
+
+    # Uninstall kops on destroy 
+    provisioner "local-exec" {
+        when = "destroy"
+        command = "if [[ -e ./${local._bkend} ]]; then rm ./${local._bkend}; fi"
+        interpreter = [ "/bin/bash", "-c" ]
+    }
+}
+resource "null_resource" "bkendcp" {
+    depends_on = [ "null_resource.bkendcfg" ]
+    triggers { bkendcfg = "${local._cmd2}" }
+    connection {
+        host = "${element(module.iacec2.ec2_ip,count.index)}"
+        type = "ssh"
+        user = "${var.username}" 
+        private_key = "${file(var.private_key_path)}" 
+    }
+    provisioner "file" { source = "./${local._bkend}", destination = "~/iac/kubernetes/${local._bkend}" }
+}
+
 output "iacec2_info" {
     description = "Ubuntu EC2 with iac & terraform installed & Network Info"
     value = {
+        ec2_ip = "${module.iacec2.ec2_ip}"
         ec2_info = "${module.iacec2.ec2_info}"
         network_info = "${module.myvpc.network_info}"
         user_name = "${aws_iam_user.user.name}" 
@@ -95,5 +147,8 @@ output "iacec2_info" {
         access_key_id = "${aws_iam_access_key.cak.id}"
         access_key_user = "${aws_iam_access_key.cak.user}"
         access_key_secret = "${aws_iam_access_key.cak.secret}"
+        s3bucket_id = "${aws_s3_bucket.s3b.id}"
+        s3bucket_arn = "${aws_s3_bucket.s3b.arn}"
+        s3bucket_region = "${aws_s3_bucket.s3b.region}"
     } 
 }
