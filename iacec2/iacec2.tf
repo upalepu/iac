@@ -6,6 +6,7 @@
     region = "${var.region}"
 	version = "~> 1.6"
 }
+
 variable "gpolicy_arn" {
     type = "list"
     description = "List of group policy arns needed by the Kubernetes group"
@@ -49,13 +50,16 @@ locals {
     # Note: This cmd assumes setupawscli is in current directory. 
     _cmd = "${format("./setupawscli.sh id=%s secret=%s", "${aws_iam_access_key.cak.id}", "${aws_iam_access_key.cak.secret}")}"
     _setupawsclicmd = [ "${local._cmd}" ]
-    _cmd2 = "${format("bucket = ${aws_s3_bucket.s3b.id}\nkey = kubernetes/terraform.tfstate\nregion = ${var.region}")}"
     _bkend = "tfs3b.cfg" 
+    _bkendpath = "./${local._bkend}"
+    _tfstatekeypath = "kubernetes/terraform.tfstate"
+    _cmd2 = "${format("bucket = ${aws_s3_bucket.s3b.id}\nkey = ${local._tfstatekeypath}\nregion = ${var.region}")}"
 }
 
+data "aws_iam_account_alias" "current" {}
 
 resource "aws_s3_bucket" "s3b" {
-    bucket = "${var.project}-terraform-state"
+    bucket = "${data.aws_iam_account_alias.current.account_alias}-${var.project}-terraform-state"
     acl    = "private"
     force_destroy = "true"
     region = "${var.region}"
@@ -64,6 +68,31 @@ resource "aws_s3_bucket" "s3b" {
         Project = "${var.project}"
     }
     versioning { enabled = "true" }
+}
+
+data "aws_caller_identity" "current" {}
+
+resource "aws_s3_bucket_policy" "s3bpol" {
+  bucket = "${aws_s3_bucket.s3b.id}"
+  policy =<<POLICY
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": { "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root" },
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::${aws_s3_bucket.s3b.id}"
+        },
+        {
+            "Effect": "Allow",
+            "Principal": { "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root" },
+            "Action": [ "s3:GetObject", "s3:PutObject" ],
+            "Resource": "arn:aws:s3:::${aws_s3_bucket.s3b.id}/${local._tfstatekeypath}"
+        }
+    ]
+}
+POLICY
 }
 module "myvpc" {
 	source = "../modules/network"
@@ -104,9 +133,9 @@ resource "null_resource" "bkendcfg" {
         # Using heredoc syntax for running multiple cmds
         # Inner EOL heredoc cmds is needed to output multi-line string to backend cfg file. 
         command = <<CMD
-if [[ -e ./${local._bkend} ]]; then rm ./${local._bkend}; fi
-touch ./${local._bkend}
-cat >> ./${local._bkend} <<EOL 
+if [[ -e ${local._bkendpath} ]]; then rm ${local._bkendpath}; fi
+touch ${local._bkendpath}
+cat >> ${local._bkendpath} <<EOL 
 ${local._cmd2}
 EOL
 CMD
@@ -116,20 +145,20 @@ CMD
     # Uninstall kops on destroy 
     provisioner "local-exec" {
         when = "destroy"
-        command = "if [[ -e ./${local._bkend} ]]; then rm ./${local._bkend}; fi"
+        command = "if [[ -e ${local._bkendpath} ]]; then rm ${local._bkendpath}; fi"
         interpreter = [ "/bin/bash", "-c" ]
     }
 }
 resource "null_resource" "bkendcp" {
-    depends_on = [ "null_resource.bkendcfg" ]
-    triggers { bkendcfg = "${local._cmd2}" }
+    depends_on = [ "null_resource.bkendcfg", "module.iacec2" ]
+    triggers { bkendcfg = "${local._cmd2}", bkendpath = "${local._bkendpath}" }
     connection {
         host = "${element(module.iacec2.ec2_ip,count.index)}"
         type = "ssh"
         user = "${var.username}" 
         private_key = "${file(var.private_key_path)}" 
     }
-    provisioner "file" { source = "./${local._bkend}", destination = "~/iac/kubernetes/${local._bkend}" }
+    provisioner "file" { source = "${local._bkendpath}", destination = "~/iac/kubernetes/${local._bkend}" }
 }
 
 output "iacec2_info" {
