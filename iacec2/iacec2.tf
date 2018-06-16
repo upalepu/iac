@@ -53,7 +53,9 @@ locals {
     _bkend = "tfs3b.cfg" 
     _bkendpath = "./${local._bkend}"
     _tfstatekeypath = "kubernetes/terraform.tfstate"
-    _cmd2 = "${format("bucket = ${aws_s3_bucket.s3b.id}\nkey = ${local._tfstatekeypath}\nregion = ${var.region}")}"
+    # Note: The escaped dbl quotes surrounding each of the %s format types are necessary for 
+    # being output as-is into the bkend cfg file   
+    _cmd2 = "${format("bucket = \"%s\"\nkey = \"%s\"\nregion = \"%s\"", aws_s3_bucket.s3b.i, local._tfstatekeypath, var.region)}"
 }
 
 data "aws_iam_account_alias" "current" {}
