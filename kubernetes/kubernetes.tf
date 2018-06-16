@@ -4,7 +4,7 @@ provider "aws" {
 	version = "~> 1.6"
 }
 
-//terraform { backend "s3" {} }
+terraform { backend "s3" {} }
 
 data "aws_route53_zone" "hz" {
     name = "${var.k8scfg["parm_domain"]}"
