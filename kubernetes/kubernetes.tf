@@ -99,14 +99,21 @@ CMD
     }
 }
 
+locals {
+    _cluster_name = "${var.k8scfg["parm_subdomain"]}.${var.k8scfg["parm_domain"]}"
+    _state = "s3://${aws_s3_bucket.s3b.id}"
+
+}
 resource "null_resource" "k8scluster" {
     depends_on = [
         "null_resource.kops",
         "null_resource.kubectl",
+        "data.external.subhz_nsrecords",
     ]
     triggers {
         k8sc_name = "${var.k8scfg["parm_subdomain"]}.${var.k8scfg["parm_domain"]}"
         k8sc_s3b_name = "${aws_s3_bucket.s3b.id}"
+        k8s_subhz_nsrecords = "${data.external.subhz_nsrecords.result}"
     }
     
     provisioner "local-exec" {
@@ -120,22 +127,22 @@ resource "null_resource" "k8scluster" {
         # Then we copy the export commands for the env variables for use by kops into the .bashrc file. 
         #   
         command = <<CMD
-if [[ -e ~/.ssh/id_rsa || ~/.ssh/id_rsa.pub ]]; then rm ~/.ssh/id_rs*; fi
+if [[ -e ~/.ssh/id_rsa || -e ~/.ssh/id_rsa.pub ]]; then rm ~/.ssh/id_rs*; fi
 ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa; if (($?)); then exit 1; fi
 kops create cluster \
 --cloud=aws \
---name=${null_resource.k8scluster.triggers.k8sc_name} \
---state=s3://${null_resource.k8scluster.triggers.k8sc_s3b_name} \
+--name=${local._cluster_name} \
+--state=${local._state} \
 --zones=${var.k8scfg["parm_region"]}a \
 --node-count=${var.k8scfg["parm_nodes"]} \
 --node-size=${var.k8scfg["parm_nodetype"]} \
 --master-size=${var.k8scfg["parm_mastertype"]} \
---dns-zone=${null_resource.k8scluster.triggers.k8sc_name} \
+--dns-zone=${local._cluster_name} \
 --yes
 if (($?)); then exit 1; fi
 if [[ ! -e ~/.bashrc ]]; then touch ~/.bashrc; fi
-echo -e "export NAME=${null_resource.k8scluster.triggers.k8sc_name}" >> ~/.bashrc
-echo -e "export KOPS_STATE_STORE=s3://${null_resource.k8scluster.triggers.k8sc_s3b_name}" >> ~/.bashrc
+echo -e "export NAME=${local._cluster_name}" >> ~/.bashrc
+echo -e "export KOPS_STATE_STORE=${local._state}" >> ~/.bashrc
 CMD
         interpreter = [ "/bin/bash", "-c" ] 
     }
@@ -146,10 +153,7 @@ CMD
     provisioner "local-exec" {
         when = "destroy"
         command = <<CMD
-kops delete cluster \
---name=${null_resource.k8scluster.triggers.k8sc_name} \
---state=s3://${null_resource.k8scluster.triggers.k8sc_s3b_name} \
---yes
+kops delete cluster --name=${local._cluster_name} --state=${local._state} --yes
 if (($?)); then exit 1; fi
 mv ~/.bashrc ~/.bashrc-kubernetes.bak
 touch ~/.bashrc
