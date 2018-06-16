@@ -6,8 +6,8 @@ The table below lists the various cloud infrastructure artifacts which can be cr
 Name|Cloud Platform|Artifact|Status|Description
 ---|---|---|---|---
 [ubuntu](#ubuntu)|AWS|EC2|Stable|Ubuntu EC2 machine in isolated VPC with SSH access 
-kubernetes|AWS|AWS Setup|Testing|Sets up AWS for running kubernetes cluster 
-iacec2|AWS|EC2|Testing|Ubuntu EC2 in isolated VPC for developing/testing iac/terraform/kubernetes 
+[iacec2](#iacec2)|AWS|EC2|Testing|Ubuntu EC2 in isolated VPC for developing/testing iac/terraform/kubernetes 
+[kubernetes](#kubernetes)|AWS|AWS Setup|Testing|Sets up AWS and a Kubernetes cluster on (iacec2) for development/testing
 
 [comment]: # (Upcoming items)
 [comment]: # (windows|AWS|EC2|Not Done|Windows Server Basic|)
@@ -31,6 +31,14 @@ If you don't have these or lost them you can recreate these. Check out details [
 
 ## <a name="ubuntu"></a>*To create Ubuntu Machines on AWS* 
 For details on creating Ubuntu machines on AWS click [here.](./docs/Ubuntu.md) 
+
+---
+## <a name="iacec2"></a>*Infrastructure As Code (iac) Development/Test environment on an AWS EC2* 
+For details on creating a fully setup (iac) EC2 machine on AWS click [here.](./docs/Iacec2.md) 
+
+---
+## <a name="kubernetes"></a>*Setting up a Kubernetes Cluster on (iacec2)* 
+For details on setting up a Kubernetes Cluster on the (iacec2) machine click [here.](./docs/Kubernetes.md) 
 
 ---
 ## <a name="tfo"></a>*Folder structure and Terraform usage overview*
