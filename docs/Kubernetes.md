@@ -74,8 +74,16 @@ rerun this command to reinitialize your working directory. If you forget, other
 commands will detect it and remind you to do so if necessary.
 ubuntu@ip-10-0-1-42:~/iac/kubernetes$
 ```
-- That's it! Blah
+- To create the Kubernetes cluster, type the following at the command prompt. This command will show the artifacts that terraform expects to create. You will be prompted to type "yes" for confirmation. Any other key cancels the command. If you typed "yes", terraform will create all the resources and exit.   
+
+```bash
+ubuntu@ip-10-0-1-42:~/iac/kubernetes$ terraform apply
+```
+- You're almost at the end. Once terraform has completed the infrastructure creation, Kubernetes suggests that you validate the cluster. In order for this to happen correctly, wait for a few minutes before running the command to validate. Once the cluster is validated, you are ready to experiment with kubernetes.    
+
+- Don't forget to run ***terraform destroy*** when you're done playing around. It will destroy all the artifacts created for the Kubernetes cluster. You can then exit from the SSH login of the ***iacec2*** machine.  
 
 ### Summary
-Blah
+Creating a kubernetes cluster is a fairly complex process with many steps in the overall process. While this can be done manually or via a script, doing it with Terraform has the unique advantage in that you can bring it all down at the push of a button. This project also shows how one can "bootstrap" an complete dev/test environment for playing with a kubernetes cluster.  
+
 
