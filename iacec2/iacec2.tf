@@ -49,7 +49,7 @@ locals {
     # Note: This cmd assumes setupawscli is in current directory. 
     _cmd = "${format("./setupawscli.sh id=%s secret=%s", "${aws_iam_access_key.cak.id}", "${aws_iam_access_key.cak.secret}")}"
     _setupawsclicmd = [ "${local._cmd}" ]
-    _cmd2 = "${format("bucket = ${aws_s3_bucket.s3b.id}\nkey = ${aws_s3_bucket.s3b.id}/kubernetes\nregion = ${var.region}")}"
+    _cmd2 = "${format("bucket = ${aws_s3_bucket.s3b.id}\nkey = kubernetes/terraform.tfstate\nregion = ${var.region}")}"
     _bkend = "tfs3b.cfg" 
 }
 
