@@ -130,7 +130,8 @@ kops create cluster \
 --node-count=${var.k8scfg["parm_nodes"]} \
 --node-size=${var.k8scfg["parm_nodetype"]} \
 --master-size=${var.k8scfg["parm_mastertype"]} \
---dns-zone=${null_resource.k8scluster.triggers.k8sc_name}
+--dns-zone=${null_resource.k8scluster.triggers.k8sc_name} \
+--yes
 if (($?)); then exit 1; fi
 if [[ ! -e ~/.bashrc ]]; then touch ~/.bashrc; fi
 echo -e "export NAME=${null_resource.k8scluster.triggers.k8sc_name}" >> ~/.bashrc
@@ -145,6 +146,11 @@ CMD
     provisioner "local-exec" {
         when = "destroy"
         command = <<CMD
+kops delete cluster \
+--name=${null_resource.k8scluster.triggers.k8sc_name} \
+--state=s3://${null_resource.k8scluster.triggers.k8sc_s3b_name} \
+--yes
+if (($?)); then exit 1; fi
 mv ~/.bashrc ~/.bashrc-kubernetes.bak
 touch ~/.bashrc
 while IFS= read -r line; do
