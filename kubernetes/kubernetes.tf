@@ -52,7 +52,6 @@ resource "aws_s3_bucket" "s3b" {
 resource "null_resource" "kops" {
     triggers {
         s3b_id = "${aws_s3_bucket.s3b.id}"
-        subhz_id = "${aws_route53_zone.subhz.zone_id}"
     }
     
     provisioner "local-exec" {
@@ -77,7 +76,6 @@ CMD
 resource "null_resource" "kubectl" {
     triggers {
         s3b_id = "${aws_s3_bucket.s3b.id}"
-        subhz_id = "${aws_route53_zone.subhz.zone_id}"
     }
     
     provisioner "local-exec" {
@@ -102,17 +100,13 @@ CMD
 locals {
     _cluster_name = "${var.k8scfg["parm_subdomain"]}.${var.k8scfg["parm_domain"]}"
     _state = "s3://${aws_s3_bucket.s3b.id}"
-
+    _nsrecords = "${length(values(data.external.subhz_nsrecords.result))}"
 }
 resource "null_resource" "k8scluster" {
-    depends_on = [
-        "null_resource.kops",
-        "null_resource.kubectl",
-        "data.external.subhz_nsrecords",
-    ]
+    depends_on = [ "data.external.subhz_nsrecords" ]
     triggers {
-        k8sc_name = "${var.k8scfg["parm_subdomain"]}.${var.k8scfg["parm_domain"]}"
         k8sc_s3b_name = "${aws_s3_bucket.s3b.id}"
+        nsrecords = "${local._nsrecords}"
     }
     
     provisioner "local-exec" {
@@ -128,20 +122,33 @@ resource "null_resource" "k8scluster" {
         command = <<CMD
 if [[ -e ~/.ssh/id_rsa || -e ~/.ssh/id_rsa.pub ]]; then rm ~/.ssh/id_rs*; fi
 ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa; if (($?)); then exit 1; fi
-kops create cluster \
---cloud=aws \
---name=${local._cluster_name} \
---state=${local._state} \
---zones=${var.k8scfg["parm_region"]}a \
---node-count=${var.k8scfg["parm_nodes"]} \
---node-size=${var.k8scfg["parm_nodetype"]} \
---master-size=${var.k8scfg["parm_mastertype"]} \
---dns-zone=${local._cluster_name} \
---yes
-if (($?)); then exit 1; fi
+created=0; tries=0; looplimit=5;	# Safety net to avoid forever loop. 
+while ((!created && looplimit)); do	# Loop while create cluster fails and looplimit non-zero.
+    ((tries++))
+    sleep 20s
+    echo -e "Creating kubernetes cluster ... [$tries]" 
+    kops create cluster \
+    --cloud=aws \
+    --name=${local._cluster_name} \
+    --state=${local._state} \
+    --zones=${var.k8scfg["parm_region"]}a \
+    --node-count=${var.k8scfg["parm_nodes"]} \
+    --node-size=${var.k8scfg["parm_nodetype"]} \
+    --master-size=${var.k8scfg["parm_mastertype"]} \
+    --dns-zone=${local._cluster_name} \
+    --yes
+    if (($?)); then 
+        echo -e "Create cluster failed. Deleting cluster ..."
+        kops delete cluster --name=${local._cluster_name} --state=${local._state} --yes 
+    else
+        created=1   # Create succeeded
+    fi
+    ((looplimit--))
+done
+if ((!created)); then echo -e "Failed to create cluster after [$tries] tries."; exit 1; fi
 if [[ ! -e ~/.bashrc ]]; then touch ~/.bashrc; fi
-echo -e "export NAME=${local._cluster_name}" >> ~/.bashrc
-echo -e "export KOPS_STATE_STORE=${local._state}" >> ~/.bashrc
+echo -e "export NAME=${local._cluster_name}" >> ~/.bashrc   # Sets it for future
+echo -e "export KOPS_STATE_STORE=${local._state}" >> ~/.bashrc # Sets it for future
 CMD
         interpreter = [ "/bin/bash", "-c" ] 
     }
