@@ -7,7 +7,7 @@ JQ=$(which jq); JQ=${#JQ}; if ((!$JQ)); then echo -e "[jq] not installed. Exitin
 # jq retrives the JSON supplied by calling terraform & parses into variables.
 eval "$(jq -r '@sh "export hosted_zone=\(.hosted_zone)"')"
 # Check to see if required variables are properly received. 
-if [[ -z "${hosted_zone}" ]]; then 
+if [[ "${hosted_zone}" == "null" ]]; then 
     echo -e "Required input [hosted_zone=$hosted_zone]. Seems empty ... Exiting!" 1>&2; exit 1 
 fi
 # Retrieve the ns records using aws command line and convert the output into text strings. 
