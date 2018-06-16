@@ -53,9 +53,10 @@ locals {
     _bkend = "tfs3b.cfg" 
     _bkendpath = "./${local._bkend}"
     _tfstatekeypath = "kubernetes/terraform.tfstate"
+    _s3bucket = "${aws_s3_bucket.s3b.i}"
     # Note: The escaped dbl quotes surrounding each of the %s format types are necessary for 
     # being output as-is into the bkend cfg file   
-    _cmd2 = "${format("bucket = \"%s\"\nkey = \"%s\"\nregion = \"%s\"", aws_s3_bucket.s3b.i, local._tfstatekeypath, var.region)}"
+    _cmd2 = "${format("bucket = \"%s\"\nkey = \"%s\"\nregion = \"%s\"", local._s3bucket, local._tfstatekeypath, var.region)}"
 }
 
 data "aws_iam_account_alias" "current" {}
@@ -162,7 +163,6 @@ resource "null_resource" "bkendcp" {
     }
     provisioner "file" { source = "${local._bkendpath}", destination = "~/iac/kubernetes/${local._bkend}" }
 }
-
 output "iacec2_info" {
     description = "Ubuntu EC2 with iac & terraform installed & Network Info"
     value = {
