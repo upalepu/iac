@@ -131,3 +131,29 @@ This usually happens if there is no ***id_rsa*** key pair in the ~/.ssh director
 ubuntu@ubuntu:~$ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa
 ```
 ---
+
+When ***terraform init -backend-config=tfs3b.cfg*** is run and you get a prompt for S3, like below ...
+
+```bash
+ubuntu@ip-10-0-1-42:~/iac/kubernetes$ terraform init
+
+Initializing the backend...
+Backend configuration changed!
+
+Terraform has detected that the configuration specified for the backend
+has changed. Terraform will now check for existing state in the backends.
+
+bucket
+  The name of the S3 bucket
+
+  Enter a value:
+```
+
+This happens if there is no ***tfs3b.cfg*** file or if the data in it is not valid. You can manually add the following information to the ***tfs3b.cfg*** file and try again. If you don't know what your AWS Account Alias is - its what you type in when you first login to the AWS console application. Alternatively, go back to the ***iacec2*** project and try to create the EC2 machine again.    
+
+```bash
+bucket = "<your aws acct alias>-demo-iacec2-terraform-state"
+key = "kubernetes/terraform.tfstate"
+region = "us-east-1"
+```
+---
