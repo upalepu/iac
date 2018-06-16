@@ -113,7 +113,6 @@ resource "null_resource" "k8scluster" {
     triggers {
         k8sc_name = "${var.k8scfg["parm_subdomain"]}.${var.k8scfg["parm_domain"]}"
         k8sc_s3b_name = "${aws_s3_bucket.s3b.id}"
-        k8s_subhz_nsrecords = "${data.external.subhz_nsrecords.result}"
     }
     
     provisioner "local-exec" {
