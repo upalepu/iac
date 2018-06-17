@@ -3,11 +3,11 @@ Having the ability to create your own virtual data center in just a couple of mi
 
 The table below lists the various cloud infrastructure artifacts which can be created using the resources in this folder. Instructions for using each type of artifact are also provided. 
 
-Name|Cloud Platform|Artifact|Status|Description
+Name|Cloud Platform|Artifact(s)|Status|Description
 ---|---|---|---|---
 [ubuntu](#ubuntu)|AWS|EC2|Stable|Ubuntu EC2 machine in isolated VPC with SSH access 
-[iacec2](#iacec2)|AWS|EC2|Testing|Ubuntu EC2 in isolated VPC for developing/testing iac/terraform/kubernetes 
-[kubernetes](#kubernetes)|AWS|AWS Setup|Testing|Sets up AWS and a Kubernetes cluster on (iacec2) for development/testing
+[iacec2](#iacec2)|AWS|EC2, AWS Command Line, iac project|Testing|Ubuntu EC2 in isolated VPC for developing/testing iac/terraform/kubernetes 
+[kubernetes](#kubernetes)|AWS|AWS Environment, Kubernetes Cluster, kops, kubectl|Testing|Sets up AWS and a Kubernetes cluster on (iacec2) for development/testing
 
 [comment]: # (Upcoming items)
 [comment]: # (windows|AWS|EC2|Not Done|Windows Server Basic|)
