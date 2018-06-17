@@ -2,6 +2,10 @@
 
 The following instructions will enable you to create multiple ubuntu EC2 machines within a dedicated Virtual private Cloud (VPC) in AWS. You can also provision these machines with any applications you require. Terraform is capable of basic provisioning of your machines, but for advanced application provisioning, you will be better off using a dedicated provisioning or configuration management software like Chef, Puppet, Ansible or Salt.
 
+Here's how the architecture of this system would look like.
+
+![AWS EC2 Architecture (ubuntu)](./ubuntu.png "AWS EC2 Architecture (ubuntu)")
+
 ## Specific pre-requisites
 
 1) Your favorite IDE or code editor (e.g. vscode, notepad++, vi etc.)
