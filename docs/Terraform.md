@@ -1,7 +1,7 @@
 
 # Infrastructure as Code - Folder structure and Terraform usage overview
 
-Terraform uses a declarative language to setup and configure infrastructure. Plugins for various providers (e.g. AWS, GCP, Azure etc.) are available which enable you to create infrastructure configurations which are agnostic to the specific provider. With well designed declaration files, Terraform enables highly scalable infrastructures. 
+Terraform uses a declarative language to setup and configure infrastructure. Plugins for various providers (e.g. AWS, GCP, Azure etc.) are available which enable you to create infrastructure configurations which are agnostic to the specific provider. With well designed declaration files, Terraform enables highly scalable infrastructures.
 
 ## Folder structure
 
