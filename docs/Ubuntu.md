@@ -1,4 +1,8 @@
 # Infrastructure as Code - To create Ubuntu machines on AWS
+<style>
+.twocol ~ * { width: 50%; float: left; box-sizing: border-box; padding-left: 1rem; }
+.onecol ~ * { clear: both; width: 100%; padding-left: 0; }
+</style>
 
 The following instructions will enable you to create multiple ubuntu EC2 machines within a dedicated Virtual private Cloud (VPC) in AWS. You can also provision these machines with any applications you require. Terraform is capable of basic provisioning of your machines, but for advanced application provisioning, you will be better off using a dedicated provisioning or configuration management software like Chef, Puppet, Ansible or Salt.
 
@@ -76,7 +80,4 @@ ubuntu@ubuntu:~/iac/ubuntu$ terraform apply
 
 Creating an ubuntu EC2 machine was as simple as specifying a few configuration parameters in the ubuntu-vars.tf file and running terraform. Terraform does the hard lifting and creates the EC2 machines.  
 
-<style>
-.twocol ~ * { width: 50%; float: left; box-sizing: border-box; padding-left: 1rem; }
-.onecol ~ * { clear: both; width: 100%; padding-left: 0; }
-</style>
+
