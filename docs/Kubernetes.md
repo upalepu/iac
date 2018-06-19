@@ -1,16 +1,32 @@
 # Infrastructure as Code - Setting up for and creating a Kubernetes Cluster on AWS
 
+<style>
+.twocol ~ * { width: 50%; float: left; box-sizing: border-box; padding-left: 1rem; }
+.onecol ~ * { clear: both; width: 100%; padding-left: 0; }
+</style>
+
 The following instructions will enable you to create a Kubernetes Cluster on AWS. The cluster has full high availability capability and can be used for development/testing purposes.
 NOTE: This cluster will cost money on AWS as it creates and uses several machines, volumes etc. Don't forget to run terraform destroy after you are done with your experimenting to take down the cluster and keep your costs low.
 
-## Specific pre-requisites
+<div class="twocol"></div>
 
-1. Make sure you have created the EC2 machine using the ***iacec2*** project. If you haven't done this stop and complete that project first. Click [here](./Iacec2.md) for details.
-2. Your favorite IDE or code editor (e.g. vscode, notepad++, vi etc.)
+Here's how the system architecture looks like. For simplicity, only port 80 and 443 are shown here for http(s) connections. You can setup the VPC for allowing any kind of port access. SSH can also be limited only to your IP address for additional security, but you will have to set that up yourself. The iacec2 machine is loaded with Ubuntu, the iac project, terraform, aws commandline and an S3 bucket for storing Terraform state remotely. In addition the machine is configured to access AWS using the kops user account. This account will be used by Kubernetes, but can also serve the purpose of accessing AWS and experimenting with AWS command line utilities.
+
+![AWS EC2 Kubernetes](./kubernetes.png "AWS EC2 Kubernetes")
+
+<div class="onecol"></div>
+
+## Pre-requisites
+
+Make sure you have all the pre-requisites needed to successfully run this project by clicking [here.](./Prereqs.md) In addition, make sure you have created the EC2 machine using the ***iacec2*** project. If you haven't done this, stop here and complete that project first. Click [here](./Iacec2.md) for details on how to setup an ***iacec2*** machine.
 
 ## Steps to follow  
 
-- SSH into the iacec2 machine using your favorite terminal program. SSH requires a user account, this should be  ***ubuntu***. You also need to provide a private key. This is the private key (.pem) file of the AWS account which was used to create the iacec2 machine. SSH also needs either the AWS ec2 ip address (e.g. ***35.172.216.152***) or host name (e.g. ***ec2-35-172-216-152.compute-1.amazonaws.com***) to complete the login. See example below.  
+There are four sets of steps to follow: [Access](#access), [Configure](#cfg), [Create](#create) and [Destroy.](#destroy)
+
+### <a name="access"></a>Access
+
+- SSH into the iacec2 machine using your favorite terminal program. SSH requires a user account, this should be  ***ubuntu***. You also need to provide a private key file. This is the private key (.pem) file of the AWS account which was used to create the iacec2 machine. SSH also needs either the AWS ec2 ip address (e.g. ***35.172.216.152***) or host name (e.g. ***ec2-35-172-216-152.compute-1.amazonaws.com***) to complete the login. See example below.  
 
 ```bash
 testuser@testbox:~$ssh -i ~/.ssh/aws_user_pvt_key.pem ubuntu@35.172.216.152
@@ -34,6 +50,10 @@ ubuntu@ip-10-0-1-42:~$ ls
 iac
 ```
 
+- Now go to the [Configure](#cfg) step.
+
+### <a name="cfg"></a>Configure
+
 - Now change to ***iac/kubernetes*** and using your favorite editor (nano or vi) create a new file  ***terraform.tfvars*** and add the name of your hosted domain as shown below.  
 
 ```bash
@@ -49,48 +69,93 @@ k8scfg = {
 }
 ```
 
-- Now you're ready to create the Kubernetes cluster. To do this, type the following command and let terraform take care of creating the cluster. If the terraform initialization succeeds, you will see something like the following. If there is a lot of red or terraform prompts you for an S3 bucket name. Go [here](./Troubleshooting.md) and search for ***backend*** to troubleshoot.
+Next, setup Terraform to have a remote state in the AWS s3 bucket. This information is already created in the ***tfs3b.cfg*** file which was uploaded as a part of the ***iacec2*** project.
+
+- At a bash prompt, type type the following command ***kubernetes$ terraform init -backend-config=tfs3b.cfg*** and let Terraform take care of the rest. The output will be as below if it succeeded, details have been omitted for brevity.
 
 ```bash
 ubuntu@ip-10-0-1-42:~/iac/kubernetes$ terraform init -backend-config=tfs3b.cfg
 
 Initializing the backend...
-
 Initializing provider plugins...
-
-The following providers do not have any version constraints in configuration,
-so the latest version was installed.
-
-To prevent automatic upgrades to new major versions that may contain breaking
-changes, it is recommended to add version = "..." constraints to the
-corresponding provider blocks in configuration, with the constraint strings
-suggested below.
-
-* provider.external: version = "~> 1.0"
-* provider.null: version = "~> 1.0"
-
+.
+.
 Terraform has been successfully initialized!
-
-You may now begin working with Terraform. Try running "terraform plan" to see
-any changes that are required for your infrastructure. All Terraform commands
-should now work.
-
+.
+.
 If you ever set or change modules or backend configuration for Terraform,
 rerun this command to reinitialize your working directory. If you forget, other
 commands will detect it and remind you to do so if necessary.
 ubuntu@ip-10-0-1-42:~/iac/kubernetes$
 ```
 
-- To create the Kubernetes cluster, type the following at the command prompt. This command will show the artifacts that terraform expects to create. You will be prompted to type "yes" for confirmation. Any other key cancels the command. If you typed "yes", terraform will create all the resources and exit.
+If the Terraform initialization fails or if Terraform prompts you for an S3 bucket name, stop the process by pressing [Ctrl+C], go to the Troubleshooting page by clicking [here](./Troubleshooting.md) and search for the word ***backend***. Follow the instructions to fix the issue and retry the Terraform initialization step.
+
+- If initialization was successful go to the [Create](#create) step.
+
+### <a name="create"></a>Create
+
+- To create the Kubernetes cluster, type the following at a bash prompt. This command will show the artifacts that terraform expects to create. You will be prompted to type ***yes*** for confirmation. Any other key cancels the command. If you typed ***yes***, Terraform will create all the resources.
 
 ```bash
 ubuntu@ip-10-0-1-42:~/iac/kubernetes$ terraform apply
 ```
 
-- You're almost at the end. Once terraform has completed the infrastructure creation, Kubernetes suggests that you validate the cluster. In order for this to happen correctly, wait for a few (3 - 10) minutes before running the command to validate. Once the cluster is validated, you are ready to experiment with kubernetes.
+- You're almost at the end. At this point exit from the SSH login to the ***iacec2*** machine and log back in.
 
-- Don't forget to run ***terraform destroy*** when you're done playing around. It will destroy all the artifacts created for the Kubernetes cluster. You can then exit from the SSH login of the ***iacec2*** machine.  
+This will run the .bashrc file in the ***iacec2*** machine which will set the following environment variables ***NAME*** (holds the name of the Kubernetes cluster) and ***KOPS_STATE_STORE*** (holds the name of the S3 bucket where Kubernetes state is stored). Once logged back in, make sure you wait for 3 - 10 minutes to validate the cluster.
+
+- The validate command is ***kops validate cluster***. When run the output will be as below if the Kubernetes cluster was created successfully.
+
+```bash
+ubuntu@ip-10-0-1-42:~/iac/kubernetes$ kops validate cluster
+output TBD
+
+```
+
+Now that the cluster has been created successfully, you can use ***kubectl*** to create and manage pods and other such Kubernetes artifacts. Once you are done experimenting with Kubernetes, don't forget to [Destroy](#destroy) the cluster.
+
+### <a name="destroy"></a>Destroy
+
+Now that you are ready to destroy your Kubernetes cluster, follow the steps below.
+
+- Run the command ***terraform destroy*** at the bash prompt. It will destroy all the artifacts created for the Kubernetes cluster. You can then exit from the SSH login of the ***iacec2*** machine.
+
+```bash
+ubuntu@ip-10-0-1-42:~/iac/kubernetes$ terraform destroy
+aws_vpc.vpc: Refreshing state... (ID: vpc-04d46999e8a521fb3)
+aws_security_group.security_group: Refreshing state... (ID: sg-03bdd9f4f79c237a1)
+.
+.
+.
+.
+module.myvpc.aws_vpc.vpc: Destroying... (ID: vpc-04d46999e8a521fb3)
+module.myvpc.aws_vpc.vpc: Destruction complete after 1s
+
+Destroy complete! Resources: XX destroyed.
+ubuntu@ip-10-0-1-42:~/iac/kubernetes$
+```
+
+Once the Kubernetes cluster is successfully destroyed, you need exit from the ***iacec2** machine and switch to your local machine to destroy the ***iacec2*** machine and associated infrastructure as well.
+
+- To destroy the ***iacec2*** machine, you should switch back to your local machine, change to the ***iac/iacec2*** directory and run the ***terraform destroy*** command. This will destroy the ***iacec2*** machine along with everything related to Kubernetes. For successful destruction, the output will look approximately like the following.
+
+```bash
+ubuntu@ip-10-0-1-42:~/iac/kubernetes$ terraform destroy
+aws_vpc.vpc: Refreshing state... (ID: vpc-04d46999e8a521fb3)
+aws_security_group.security_group: Refreshing state... (ID: sg-03bdd9f4f79c237a1)
+.
+.
+.
+module.myvpc.aws_vpc.vpc: Destroying... (ID: vpc-04d46999e8a521fb3)
+module.myvpc.aws_vpc.vpc: Destruction complete after 1s
+
+Destroy complete! Resources: XX destroyed.
+ubuntu@ip-10-0-1-42:~/iac/kubernetes$
+```
+
+That concludes this project. All AWS infrastructure artifacts are created and destroyed properly so there is no unncessary cost incurred. If you prefer, you can login to your AWS account and double-check that the Kubernetes cluster and all of the infrastructure items it created are no longer present.
 
 ## Summary
 
-Creating a kubernetes cluster is a fairly complex process with many steps in the overall process. While this can be done manually or via a script, doing it with Terraform has the unique advantage in that you can bring it all down at the push of a button. This project also shows how one can "bootstrap" a complete dev/test environment with a kubernetes cluster.
+Creating a Kubernetes cluster is a lengthy process and it can be challenging to remove all the Kubernetes artifacts manually. This runs the risk of paying for compute resources unnecessarily. A bash script could be utilized to automate the cluster creation. However, one major benefit of Terraform is that it stores the state of the infrastructure in a safe location, which means that you can destroy the entire Kubernetes cluster environment with just one simple command. This project shows how one can "bootstrap" a complete dev/test environment with a Kubernetes cluster and take it down as easily.
