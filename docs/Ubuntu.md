@@ -64,7 +64,7 @@ ver = "14"
 
 ### <a name="create"></a>Create
 
-The following steps will show you how to create a ubuntu EC2 machine using terraform. Make sure you have configured terraform by following the steps in the [Configure](#cfg) section.
+The following steps will show you how to create a ubuntu EC2 machine using Terraform. Make sure you have configured Terraform by following the steps in the [Configure](#cfg) section.
 
 - At your bash prompt, run the ***terraform init*** command. The plugins will be installed and the system will be checked for proper dependencies. If there are no errors you will see output similar to the following. If there are errors click [here](./Troubleshooting.md) to troubleshoot the problem.
 
