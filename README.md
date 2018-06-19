@@ -27,15 +27,15 @@ For details on creating Ubuntu machines on AWS click [here.](./docs/Ubuntu.md)
 
 ---
 
-## <a name="iacec2"></a>*Infrastructure As Code (iac) Development/Test environment on an AWS EC2*
+## <a name="iacec2"></a>*Develop/Test IAC with Terraform/Kubernetes on AWS EC2 (iacec2)*
 
-For details on creating a fully setup (iac) EC2 machine on AWS click [here.](./docs/Iacec2.md)
+For details on creating a Dev/Test environment with Terraform, Kubernetes and AWS command line on an AWS EC2 machine click [here.](./docs/Iacec2.md)
 
 ---
 
-## <a name="kubernetes"></a>*Setting up a Kubernetes Cluster on (iacec2)*
+## <a name="kubernetes"></a>*Kubernetes Cluster on AWS*
 
-For details on setting up a Kubernetes Cluster on the (iacec2) machine click [here.](./docs/Kubernetes.md)
+For details on setting up and using a Kubernetes Cluster on AWS using the (iacec2) machine click [here.](./docs/Kubernetes.md)
 
 ---
 
