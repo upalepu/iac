@@ -7,7 +7,7 @@ The table below lists the various cloud infrastructure artifacts which can be cr
 Name|Cloud Platform|Artifact(s)|Status|Description
 ---|---|---|---|---
 [ubuntu](./docs/Ubuntu.md)|AWS|EC2|Stable|Ubuntu EC2 machine in isolated VPC with SSH access
-[iacec2](./docs/Iacec2.md)|AWS|EC2, AWS Command Line, iac project|Testing|Ubuntu EC2 in isolated VPC for developing/testing iac/terraform/kubernetes
+[iacec2](./docs/Iacec2.md)|AWS|EC2, AWS Command Line, Terraform, iac project|Testing|Ubuntu EC2 in isolated VPC for developing/testing iac/terraform/kubernetes
 [kubernetes](./docs/Kubernetes.md)|AWS|AWS Environment, Kubernetes Cluster, kops, kubectl|Testing|Sets up AWS and a Kubernetes cluster on (iacec2) for development/testing
 
 [comment]: # (Upcoming items)
