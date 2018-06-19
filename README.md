@@ -27,6 +27,12 @@ For details on creating Ubuntu machines on AWS click [here.](./docs/Ubuntu.md)
 
 ---
 
+## <a name="tfo"></a>*Folder structure and Terraform usage overview*
+
+For a brief overview ofthe folder structure in this project and Terrafrom click [here.](./docs/Terraform.md)
+
+---
+
 ## <a name="iacec2"></a>*Develop/Test IAC with Terraform/Kubernetes on AWS EC2 (iacec2)*
 
 For details on creating a Dev/Test environment with Terraform, Kubernetes and AWS command line on an AWS EC2 machine click [here.](./docs/Iacec2.md)
@@ -36,12 +42,6 @@ For details on creating a Dev/Test environment with Terraform, Kubernetes and AW
 ## <a name="kubernetes"></a>*Kubernetes Cluster on AWS*
 
 For details on setting up and using a Kubernetes Cluster on AWS using the (iacec2) machine click [here.](./docs/Kubernetes.md)
-
----
-
-## <a name="tfo"></a>*Folder structure and Terraform usage overview*
-
-For a brief overview ofthe folder structure in this project and Terrafrom click [here.](./docs/Terraform.md)
 
 ---
 
