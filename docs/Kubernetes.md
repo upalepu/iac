@@ -136,7 +136,7 @@ Destroy complete! Resources: XX destroyed.
 ubuntu@ip-10-0-1-42:~/iac/kubernetes$
 ```
 
-Once the Kubernetes cluster is successfully destroyed, you need exit from the ***iacec2** machine and switch to your local machine to destroy the ***iacec2*** machine and associated infrastructure as well.
+Once the Kubernetes cluster is successfully destroyed, you need exit from the ***iacec2*** machine and switch to your local machine to destroy the ***iacec2*** machine and associated infrastructure as well.
 
 - To destroy the ***iacec2*** machine, you should switch back to your local machine, change to the ***iac/iacec2*** directory and run the ***terraform destroy*** command. This will destroy the ***iacec2*** machine along with everything related to Kubernetes. For successful destruction, the output will look approximately like the following.
 
