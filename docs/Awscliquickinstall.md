@@ -2,7 +2,7 @@
 
 If you already have AWS CLI installed and configured properly, you don't need to do this step. Do this only if you have never installed AWS CLI on this machine.  
 
-- Open a bash shell and switch to the ***helpers*** folder
+- Open a bash shell and switch to the ***iac/helpers*** folder in the ***iac*** project
 - Check to see if ***setupawscli.sh*** can be executed by running ***ls -l***
   - If it is not, make it executable using the following command
 
@@ -16,4 +16,4 @@ ubuntu@ubuntu:~/iac/helpers$ chmod +x ./setupawscli.sh
 ubuntu@ubuntu:~/iac/helpers$ ./setuptawscli.sh id=ABCDEFGHIJKLMNOPQRST secret=ABC76+sdasd98sd/8hsdgTHY/asdj86HGASGAHSY
 ```
 
-- This script will check if AWS CLI is installed on the local machine and if not, it will install it. It will use the supplied AWS ***Access Key Id*** and the ***Secret Access Key*** and configure the CLI. This will allow ***terraform*** to work correctly.  
+- This script will check if AWS CLI is installed on the local machine and if not, it will install it. It will use the supplied AWS ***Access Key Id*** and the ***Secret Access Key*** and configure the CLI. With this setup complete you can use the AWS command line utility to perform any AWS actions or use Terrafrom to create AWS infrastructure.
