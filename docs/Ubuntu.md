@@ -17,11 +17,7 @@ Here's how the system architecture looks like. For simplicity, only port 80 and 
 
 ## Pre-requisites
 
-1. You will need an AWS Account. If you don't have an account, sign up for free [here.](https://aws.amazon.com/free/)
-2. You will also need your AWS ***Access Key Id*** and ***Secret Access Key***. Check out details on how to get these [here.](https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/setup-credentials.html) If you don't have these or lost them you can recreate these. Check out details [here.](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey)
-3. You will need the AWS Commandline Interface (CLI) installed on your local machine. For a quick way to install the AWS CLI on your local machine, follow the instructions [here.](#awsclii)
-4. You will need ***terraform*** installed on your local machine. Check out details [here.](./docs/Terraforminstall.md)
-5. Your favorite IDE or code editor (e.g. vscode, notepad++, vi etc.)
+Make sure you have all the pre-requisites needed to successfully run this project by clicking [here.](./Prereqs.md)
 
 ## Steps to follow  
 
@@ -42,9 +38,10 @@ If you are comfortable with using AWS in general you can consider changing some 
 
 - Otherwise, go to [Create.](#create)
 
-## <a name="advcfg"></a>Advanced Configuration
+#### <a name="advcfg"></a>Advanced Configuration
 
-- The following steps are for those who are comfortable around AWS concepts. You can change any of the following parameters. See [Example Configuration](#advcfgex) below. NOTE: The ***region*** variable cannot be changed in this project. It needs to remain at its default value *us-east-1*.
+The following steps are for those who are comfortable around AWS concepts. You can change any of the following parameters. See [Example Configuration](#advcfgex) below. NOTE: The ***region*** variable cannot be changed in this project. It needs to remain at its default value *us-east-1*.
+
 - ***project*** is an AWS tag. The default is *demo-ubuntu*.
 - Default ***ec2_type*** is *t2.small*. If the machine will be used as a server, a *t2.medium* may be a better choice. For additional AWS machine types check [here.](https://aws.amazon.com/ec2/instance-types/)
 - The ***count*** variable needs to be set **only** if you want more than one EC2 machine to be created.
