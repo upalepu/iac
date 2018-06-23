@@ -119,7 +119,8 @@ Now that the cluster has been created successfully, you can use ***kubectl*** to
 
 Now that you are ready to destroy your Kubernetes cluster, follow the steps below.
 
-- Run the command ***terraform destroy*** at the bash prompt. It will destroy all the artifacts created for the Kubernetes cluster. You can then exit from the SSH login of the ***iacec2*** machine.
+- Run the command ***terraform destroy*** at the bash prompt. It will destroy all the artifacts created for the Kubernetes cluster. You can then exit from the SSH login of the ***iacec2*** machine. Note that you are running this command on the ***iacec2*** machine and not on your local machine.
+
 
 ```bash
 ubuntu@ip-10-0-1-42:~/iac/kubernetes$ terraform destroy
