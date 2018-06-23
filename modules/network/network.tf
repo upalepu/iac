@@ -67,6 +67,16 @@ resource "aws_security_group_rule" "allow_ssh_inbound" {
 	cidr_blocks = ["0.0.0.0/0"]
 }
 
+# ingress rule for winrm access
+resource "aws_security_group_rule" "allow_winrm_inbound" {
+	type = "ingress"
+	security_group_id = "${aws_security_group.security_group.id}"
+	from_port   = 5985
+	to_port     = 5985
+	protocol    = "tcp"
+	cidr_blocks = ["0.0.0.0/0"]
+}
+
 # ingress rule for RDP access
 resource "aws_security_group_rule" "allow_rdp_inbound" {
 	type = "ingress"
