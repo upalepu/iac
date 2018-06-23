@@ -113,9 +113,7 @@ module "iacec2" {
     region = "${var.region}"
 	sg_ids = ["${module.myvpc.security_group}"]
 	subnet_id = "${module.myvpc.subnet}"
-    platform = "${var.platform}"
     ver = "${var.ver}"
-    db = "${var.db}"
     username = "${var.username}"
     root_volume = "${var.rootvol}"
     additional_volumes = "${var.additional_volumes}"
