@@ -1,10 +1,5 @@
 # Infrastructure as Code - Setting up for and creating a Kubernetes Cluster on AWS
 
-<style>
-.twocol ~ * { width: 50%; float: left; box-sizing: border-box; padding-left: 1rem; }
-.onecol ~ * { clear: both; width: 100%; padding-left: 0; }
-</style>
-
 The following instructions will enable you to create a Kubernetes Cluster on AWS. The cluster has full high availability capability and can be used for development/testing purposes.
 NOTE: This cluster will cost money on AWS as it creates and uses several machines, volumes etc. Don't forget to run terraform destroy after you are done with your experimenting to take down the cluster and keep your costs low.
 
@@ -311,3 +306,8 @@ That concludes this project. All AWS infrastructure artifacts are created and de
 ## Summary
 
 Creating a Kubernetes cluster is a lengthy process and it can be challenging to remove all the Kubernetes artifacts manually. This runs the risk of paying for compute resources unnecessarily. A bash script could be utilized to automate the cluster creation. However, one major benefit of Terraform is that it stores the state of the infrastructure in a safe location, which means that you can destroy the entire Kubernetes cluster environment with just one simple command. This project shows how one can "bootstrap" a complete dev/test environment with a Kubernetes cluster and take it down as easily.
+
+<style>
+.twocol ~ * { width: 50%; float: left; box-sizing: border-box; padding-left: 1rem; }
+.onecol ~ * { clear: both; width: 100%; padding-left: 0; }
+</style>

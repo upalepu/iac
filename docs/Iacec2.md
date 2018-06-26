@@ -1,10 +1,5 @@
 # Infrastructure as Code - Creating an (iac) Dev/Test EC2 machine on AWS
 
-<style>
-.twocol ~ * { width: 50%; float: left; box-sizing: border-box; padding-left: 1rem; }
-.onecol ~ * { clear: both; width: 100%; padding-left: 0; }
-</style>
-
 The purpose of this project is to have an AWS EC2 machine automatically created with everything on it to explore infrastructure as code (iac) using Terraform. In addition this machine can also be used to automatically setup AWS and create a Kubernetes cluster.
 
 If you're wondering why do I need a separate AWS EC2 machine to run my terraform configurations, why not use my local machine? The answer is simple, if you know what you're doing and you're an advanced user of Terraform, AWS, Kubernetes etc., you can do everything from your local machine. If you're still learning, you're safer with a separate environment where your experiments don't end up creating problems with your development machine.
@@ -145,3 +140,8 @@ Your AWS EC2 infrastructure is completely destroyed. To verify that the machine 
 Creating an ***iacec2*** EC2 machine was as simple as specifying a few configuration parameters in the ***terraform.tfvars*** file and running a couple of Terraform commands. In that machine you had a safe and simple environment to experiment with Terraform. If you tried the Kubernetes project you also have experiened the power of creating an entire Kubernetes cluster and destroy it all. If you haven't yet tried the [kubernetes](./Kubernetes.md) project, go back and re-run this project to create the iacec2 machine and then go to the kubernetes project and create a Kubernete cluster. Note that Kubernetes will install at a minimum 3 machines and will also setup many other AWS items like a hosted zone and a subdomain etc. Several of these services will cost money, so make sure you destroy the items after you're done experimenting, so you don't incur too much cost.
 
 If you want to learn about Terraform in more detail go to the [source](http://www.terraform.io) and learn more.  
+
+<style>
+.twocol ~ * { width: 50%; float: left; box-sizing: border-box; padding-left: 1rem; }
+.onecol ~ * { clear: both; width: 100%; padding-left: 0; }
+</style>

@@ -1,10 +1,5 @@
 # Infrastructure as Code - Windows EC2 on AWS
 
-<style>
-.twocol ~ * { width: 50%; float: left; box-sizing: border-box; padding-left: 1rem; }
-.onecol ~ * { clear: both; width: 100%; padding-left: 0; }
-</style>
-
 The following instructions will enable you to create multiple Windows EC2 machines within a dedicated Virtual private Cloud (VPC) in AWS. You can also provision these machines with any applications you require. Terraform is capable of basic provisioning of your machines, but for advanced application provisioning, you will be better off using a dedicated provisioning or configuration management software like Octopus, Chef, Puppet, Ansible or Salt.
 
 <div class="twocol"></div>
@@ -161,3 +156,8 @@ That's it! Your AWS EC2 infrastructure - VPC & EC2 machine or machines have been
 ## Summary
 
 Creating a ***winec2*** EC2 machine was as simple as specifying a few configuration parameters in the ***terraform.tfvars*** file and running a couple of Terraform commands. Terraform does the hard lifting and creates the EC2 machines. Destroying the infrastructure created by Terraform is also quite easy. Now that you see the power of Terraform, try some of the other projects (e.g. [iacec2](./Iacec2.md)). To understand how Terraform does its magic read up on basic Terraform concepts [here](./Terraform.md) or go to the [source](http://www.terraform.io) itself and learn more.  
+
+<style>
+.twocol ~ * { width: 50%; float: left; box-sizing: border-box; padding-left: 1rem; }
+.onecol ~ * { clear: both; width: 100%; padding-left: 0; }
+</style>
