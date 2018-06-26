@@ -97,6 +97,16 @@ resource "aws_security_group_rule" "allow_http_inbound" {
 	cidr_blocks = ["0.0.0.0/0"]
 }
 
+# HTTPS access from all
+resource "aws_security_group_rule" "allow_https_inbound" {
+	type = "ingress"
+	security_group_id = "${aws_security_group.security_group.id}"
+	from_port   = 443
+	to_port     = 443
+	protocol    = "tcp"
+	cidr_blocks = ["0.0.0.0/0"]
+}
+
 # Outbound internet access
 resource "aws_security_group_rule" "allow_all_outbound" {
 	type = "egress"
