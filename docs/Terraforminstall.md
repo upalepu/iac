@@ -4,9 +4,9 @@ In order to use terraform as your infrastructure creator, it needs to be install
 
 Terraform is a single binary file and can easily be downloaded and installed. It is available for many operating systems. Check out details [here.](https://www.terraform.io/downloads.html)
 
-If you are using a local 64-bit (x86) Linux machine (not ARM), you can do the following steps to install the 64-bit terraform binary to your machine.
+## Quick way to install Terraform on a 64-bit Linux machine  
 
-## Quick way to install terraform on a 64-bit Linux machine  
+If you are using a local 64-bit (x86) Linux machine (not ARM), you can do the following steps to install the 64-bit Terraform binary to your machine.
 
 - Open a bash shell and switch to the ***helpers*** folder
 - Check to see if ***setupterraform.sh*** can be executed by running ***ls -l***
@@ -33,3 +33,20 @@ ubuntu@ubuntu:~/iac/helpers$ ./setupterraform.sh
 #
 TERRAFORMINSTALLLOCATION="/usr/local/bin"
 ```
+
+## Install Terraform on a Windows 10 machine  
+
+If you wish to install terraform on a Windows 10 machine, you can do the following steps.
+
+- Download the appropriate Terraform zip file from [here](https://www.terraform.io/downloads.html) and extract the terraform.exe file to an appropriate directory. (e.g. C:\HashiCorp)
+- Add this directory to your Windows system Path Environment variable.
+- Open a COMMAND PROMPT (cmd) or POWERSHELL and type ***terraform version*** to check that it is installed.
+
+```cmd
+C:\Users\myusername>terraform version
+Terraform v0.11.7
+
+C:\Users\myusername>
+```
+
+- Thats it. Terraform is installed and ready to be used on your Windows machine.
