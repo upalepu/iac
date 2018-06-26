@@ -125,7 +125,7 @@ resource "aws_instance" "ec2" {
         delete_on_termination = "${lookup(var.root_volume,"delete_on_termination")}"
     }
     tags {
-        Name = "${var.machine_name}-${count.index}"
+        Name = "${var.machine_name}-${count.index+1}"
         Project = "${var.project}"
         Platform = "Linux"
     }
