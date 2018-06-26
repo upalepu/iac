@@ -8,7 +8,8 @@ Name|Cloud Platform|Artifact(s)|Status|Description
 ---|---|---|---|---
 [ubuntu](./docs/Ubuntu.md)|AWS|EC2|Stable|Ubuntu EC2 machine in isolated VPC with SSH access
 [iacec2](./docs/Iacec2.md)|AWS|EC2, AWS Command Line, Terraform, iac project|Testing|Ubuntu EC2 in isolated VPC for developing/testing iac/terraform/kubernetes
-[kubernetes](./docs/Kubernetes.md)|AWS|AWS Environment, Kubernetes Cluster, kops, kubectl|Testing|Sets up AWS and a Kubernetes cluster on (iacec2) for development/testing
+[kubernetes](./docs/Kubernetes.md)|AWS|AWS Environment, Kubernetes Cluster, kops, kubectl|Stable|Sets up AWS and a Kubernetes cluster on (iacec2) for development/testing
+[winec2](./docs/Windows.md)|AWS|EC2,SQL Server(if specified)|Stable|Windows EC2 machine in isolated VPC with RDP access
 
 [comment]: # (Upcoming items)
 [comment]: # (windows|AWS|EC2|Not Done|Windows Server Basic|)
