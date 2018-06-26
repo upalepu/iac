@@ -7,14 +7,17 @@ Terraform uses a declarative language to setup and configure infrastructure. Plu
 
 The folder structure for this project is designed for modularity and is as follows:
 
-- ***iac*** (root folder)
+- ***iac*** (root project folder)
   - ***docs*** (contains the documentation for various sub-projects in this project)
   - ***helpers*** (contains bash script files and other files used for remote commands)
   - ***modules*** (contains reusable terraform modules)
-    - ***ec2*** (module for creating ec2 machines)
+    - ***ec2*** (module for creating linux EC2 machines)
     - ***network*** (module for creating the virtual private cloud in AWS)
-  - ***infrastructure folder*** (e.g. ubuntu - contains the main terraform and vars files for each type of machine infrastructure to be created )
-  - ***infrastructure folder***
+    - ***wec2*** (module for creating windows EC2 machines )
+  - ***iacec2*** (creates a linux EC2 with terraform code, AWS CLI and Terraform ready for experiments)
+  - ***kubernetes*** (creates a kubernetes cluster with one master and two nodes on AWS)
+  - ***ubuntu*** (creates as basic ubuntu linux EC2 machine on AWS)
+  - ***winec2*** (creates a Windows Server 2016, 2012, with or without Standard or Enterprise SQL server on AWS)
   - ***README.MD*** (This file)
 
 ***helpers*** is a special folder which contains bash scripts that can be run remotely on the EC2 machines to provision them after creation.
