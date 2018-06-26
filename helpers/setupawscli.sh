@@ -34,23 +34,34 @@ if ((${#AWS_SECRET_ACCESS_KEY} != 40)); then
     echo -e "Valid secret will look like this -> ABC76+sdasd98sd/8hsdgTHY/asdj86HGASGAHSY"
     exit 1 
 fi
-
-AWSINSTALLED=$(which aws)
-PYTHON3INSTALLED=$(which python3)
-PIP3INSTALLED=$(which pip3)
-if [[ "$AWSINSTALLED" = "" ]]; then
-    echo -e "AWS Command Line Interface is not installed. Checking dependencies and installing ..."
-    if [[ "$PIP3INSTALLED" == "" ]]; then 
-        sudo apt-get update -y &>/dev/null
-        if [[ "$PYTHON3INSTALLED" == "" ]]; then
-            sudo apt-get install -y python3 &>/dev/null
-        fi
-        sudo apt-get install -y python3-pip &>/dev/null
+# in Windows bash, which returns a big string instead of nothing if it doesn't find the cmd. So we redirect err to /dev/null. 
+# This works for both envs. grep -Eoc returns 1 if found. 0 if not. 
+AWSINSTALLED=$(which aws 2>/dev/null | grep -Eoc aws)
+if [[ ! -z ${OS:-} ]]; then	    # Will be non-zero if running bash in windows 
+    if ((!$AWSINSTALLED)); then
+        echo -e "AWS Command Line Interface is not installed."
+        echo -e "Please install it manually from here - https://aws.amazon.com/cli/"
+        echo -e "Once you're done with that, you can run this program again to configure AWS CLI"
+        exit 1
     fi
-    pip3 install awscli --upgrade --user &>/dev/null
+else 
+    # Only do this for regular unix envs. 
+    PYTHON3INSTALLED=$(which python3 2>/dev/null | grep -Eoc python3)
+    PIP3INSTALLED=$(which pip3 2>/dev/null | grep -Eoc pip3)
+    if ((!$AWSINSTALLED)); then
+        echo -e "AWS Command Line Interface is not installed. Checking dependencies and installing ..."
+        if ((!$PIP3INSTALLED)); then 
+            sudo apt-get update -y &>/dev/null
+            if ((!$PYTHON3INSTALLED)); then
+                sudo apt-get install -y python3 &>/dev/null
+            fi
+            sudo apt-get install -y python3-pip &>/dev/null
+        fi
+        pip3 install awscli --upgrade --user &>/dev/null
+    fi
 fi
 echo -e "AWS Command Line Interface is installed."
-echo -e "Creating AWS CLI configuration ..."
+echo -e "Checking AWS CLI configuration ..."
 
 if [[ ! -d "$AWS_CFG_DIR" ]]; then
     echo -e "AWS CLI configuration is not present. Creating ..."
