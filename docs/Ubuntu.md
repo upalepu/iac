@@ -45,9 +45,7 @@ The following steps are for those who are comfortable around AWS concepts. You c
 - ***project*** is an AWS tag. The default is *demo-ubuntu*.
 - Default ***ec2_type*** is *t2.small*. If the machine will be used as a server, a *t2.medium* may be a better choice. For additional AWS machine types check [here.](https://aws.amazon.com/ec2/instance-types/)
 - The ***count*** variable needs to be set **only** if you want more than one EC2 machine to be created.
-- ***platform*** is *linux* so nothing needs to be done here.
 - For ubuntu 16.04, nothing has to be set on the ***ver*** variable. If ubuntu 14.04 or ubuntu 12.04 is needed, you can change this to *14* or *12* respectively.
-- The ***db*** variable is used only for windows EC2 machines, so it can be ignored.
 - The other variables can be left to their default values.
 
 <a name="advcfgex"></a>***Example Configuration*** (include in your ***terraform.tfvars*** file)
@@ -159,7 +157,7 @@ Destroy complete! Resources: 15 destroyed.
 ubuntu@ubuntu:~/iac/ubuntu$
 ```
 
-That's it! Your AWS EC2 infrastructure - VPS & EC2 machine or machines have been destroyed. To verify that the machine is no longer available, try to SSH into the machine from a bash command prompt. You should get a timeout. Try and access the machine from your browser, using both the IP address and the Amazon EC2 address. You should get an error.
+That's it! Your AWS EC2 infrastructure - VPC & EC2 machine or machines have been destroyed. To verify that the machine is no longer available, try to SSH into the machine from a bash command prompt. You should get a timeout. Try and access the machine from your browser, using both the IP address and the Amazon EC2 address. You should get an error.
 
 ## Summary
 
