@@ -12,10 +12,10 @@ function finish() { # finish. This gets called when program exits (whether it is
 trap finish EXIT
 
 if [[ -e "$TERRAFORMINSTALLLOCATION/terraform" ]]; then
-    echo -e "Removing existing terraform ..."
+    echo -e "\nRemoving existing terraform ..."
     sudo rm $TERRAFORMINSTALLLOCATION/terraform &>/dev/null
 fi 
-echo -e "Checking for latest version of 64-bit Linux Terraform ..."
+echo -e "\nChecking for latest version of 64-bit Linux Terraform ..."
 wget https://releases.hashicorp.com/terraform &>/dev/null
 if (($?)); then echo -e "Could not figure out latest version of terraform. Install it manually!"; exit 1; fi
 cat terraform | grep -Eo "/[0-9]*\.[0-9]*\.[0-9]*" | grep -Eo "[0-9]*\.[0-9]*\.[0-9]*" > tmp
@@ -25,7 +25,7 @@ if [[ -e "./terraform" ]]; then rm ./terraform &>/dev/null; fi
 if [[ -e "./tmp" ]]; then rm ./tmp > /dev/null; fi
 echo -e "Latest Terraform version is [$LATESTTERRAFORMVERSION]"
 TERRAFORMZIP="terraform_""$LATESTTERRAFORMVERSION""_linux_amd64.zip"
-echo -e "Downloading latest terraform file [$TERRAFORMZIP] ..." 
+echo -e "\nDownloading latest terraform file [$TERRAFORMZIP] ..." 
 wget https://releases.hashicorp.com/terraform/$LATESTTERRAFORMVERSION/$TERRAFORMZIP &>/dev/null
 if (($?)); then echo -e "Could not download [$TERRAFORMZIP]. Install it manually!"; exit 1; fi
 isunzip=$(which unzip)
@@ -43,17 +43,19 @@ if (($?)); then
 else
     echo -e "Moved [terraform] to [$TERRAFORMINSTALLLOCATION.]"
 fi 
-echo -e "Checking if [$TERRAFORMINSTALLLOCATION] is in the PATH ..."
+echo -e "\nChecking if [$TERRAFORMINSTALLLOCATION] is in the PATH ..."
 INPATH=$(env | grep -Eoc "$TERRAFORMINSTALLLOCATION")
 if ((!$INPATH)); then 
     echo -e "Could not find [$TERRAFORMINSTALLLOCATION] in the PATH. Adding ..."
-    export PATH="$TERRAFORMINSTALLOCATION:$PATH"; 
+    if [[ ! -e ~/.bashrc ]]; then touch ~/.bashrc; fi
+    echo -e "export export PATH=$TERRAFORMINSTALLOCATION:\$PATH" >> ~/.bashrc   # Sets it for future
+    echo -e "Path will work the next time you log in to this machine."
 else
     echo -e "Found [$TERRAFORMINSTALLLOCATION] in the PATH!"
 fi
-terraform --version
+$TERRAFORMINSTALLLOCATION/terraform --version
 if (($?)); then 
     echo -e "Terraform installation didn't complete! Install it manually!"
 else 
-    echo -e "$(terraform --version) installed successfully from [$TERRAFORMZIP]!"
+    echo -e "$($TERRAFORMINSTALLLOCATION/terraform --version) installed successfully from [$TERRAFORMZIP]!"
 fi
