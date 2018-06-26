@@ -11,9 +11,6 @@ Name|Cloud Platform|Artifact(s)|Status|Description
 [kubernetes](./docs/Kubernetes.md)|AWS|AWS Environment, Kubernetes Cluster, kops, kubectl|Stable|Sets up AWS and a Kubernetes cluster on (iacec2) for development/testing
 [winec2](./docs/Windows.md)|AWS|EC2,SQL Server(if specified)|Stable|Windows EC2 machine in isolated VPC with RDP access
 
-[comment]: # (Upcoming items)
-[comment]: # (windows|AWS|EC2|Not Done|Windows Server Basic|)
-
 To try out creating your own infrastructure using code, either clone this project using git or download it to your local machine and try it out. For more advanced projects like ***kubernetes***, first create an AWS EC2 machine using the ***iacec2*** project and try your projects there so you can have a clean and disposable environment.
 
 ```bash
