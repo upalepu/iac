@@ -32,6 +32,7 @@ variable "k8scfg" {
 	type = "map"
 	description = "AWS Configuration information for Kubernetes Cluster user name & group"
 	default = {
+		parm_k8sproj = "k8sgossip" # Valid options: Must be one of the dirs (kubernetes|k8sgossip in iac) 
 		parm_group = "kopsgroup"
 		parm_user = "kops"
 		md_force_destroy = "false" # Experimental. "true" if "user" has to be deleted even if it has non-terraform access keys.
