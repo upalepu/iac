@@ -1,7 +1,8 @@
 # Infrastructure as Code - Setting up for and creating a Kubernetes Cluster on AWS
 
 The following instructions will enable you to create a Kubernetes Cluster on AWS. The cluster has full high availability capability and can be used for development/testing purposes.
-NOTE: This cluster will cost money on AWS as it creates and uses several machines, volumes etc. Don't forget to run terraform destroy after you are done with your experimenting to take down the cluster and keep your costs low.
+NOTE: This cluster will cost money on AWS as it creates and uses several machines, volumes etc. Don't forget to run ***terraform destroy*** after you are done with your experimenting to take down the cluster and keep your costs low.
+NOTE: If you want to use the ***kubernetes*** project, you will need an external domain name either in Route53 or from a 3rd party Domain name provider like godaddy. If you don't have a domain name or don't want to purchase one, you should use the ***k8sgossip*** project to create your Kubernetes cluster. See the section on [domains](./Domains.md) for more details.
 
 <div class="twocol"></div>
 
@@ -15,7 +16,8 @@ Here's how the system architecture looks like. For simplicity, only port 80 and 
 
 Make sure you have all the pre-requisites needed to successfully run this project by clicking [here.](./Prereqs.md) In addition, make sure you have created the EC2 machine using the ***iacec2*** project. If you haven't done this, stop here and complete that project first. Click [here](./Iacec2.md) for details on how to setup an ***iacec2*** machine.
 
-- In addition, you will need a web domain. Either create one on AWS or if you already have an existing domain from a 3rd party provider you can use that. This project assumes you have a domain with AWS on Route53. If you have a 3rd party domain, there are a few manual steps to do before you can use this project. For more details on setting up domains, click [here.](./Domains.md)
+- If you're planning on using the ***k8sgossip*** project, then you don't have any more pre-requisites. Skip to the ***Steps to follow*** section below.
+- If you're planning on using the ***kubernetes*** project, you will need a web domain. Either create one on AWS or if you already have an existing domain from a 3rd party provider you can use that. This project assumes you have a domain with AWS on Route53. If you have a 3rd party domain, there are a few manual steps to do before you can use this project. For more details on setting up domains, click [here.](./Domains.md)
 
 ## Steps to follow  
 
