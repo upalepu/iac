@@ -124,6 +124,9 @@ module "iacec2" {
     remote_commands = "${concat("${var.remote_commands}","${local._setupawsclicmd}")}"
 }
 
+# This resource creates the file which contains the backend config data for terraform
+# It's used by the k8sgossip and kubernetes projects as a convenience. 
+# The variable local._cmd2 contains the information. 
 resource "null_resource" "bkendcfg" {
     triggers {
         s3b_id = "${aws_s3_bucket.s3b.id}"
@@ -143,13 +146,19 @@ CMD
         interpreter = [ "/bin/bash", "-c" ] 
     }
 
-    # Uninstall kops on destroy 
+    # Delete bkendcfg file.  
     provisioner "local-exec" {
         when = "destroy"
         command = "if [[ -e ${local._bkendpath} ]]; then rm ${local._bkendpath}; fi"
         interpreter = [ "/bin/bash", "-c" ]
     }
 }
+# This resource is used to copy the backend config file to the appropriate kubernetes project 
+# directory on the iacec2 machine. 
+# There are two kubernetes projects currently. "kubernetes" & "k8sgossip"
+# They differ in that the k8sgossip project doesn't require an external Route53 based (or other) DNS
+# for creating a kubernetes cluster.
+# The parm_k8sproj variable should be set to one of the above. It defaults to k8sgossip. 
 resource "null_resource" "bkendcp" {
     depends_on = [ "null_resource.bkendcfg", "module.iacec2" ]
     triggers { bkendcfg = "${local._cmd2}", bkendpath = "${local._bkendpath}" }
@@ -159,7 +168,7 @@ resource "null_resource" "bkendcp" {
         user = "${var.username}" 
         private_key = "${file(var.private_key_path)}" 
     }
-    provisioner "file" { source = "${local._bkendpath}", destination = "~/iac/kubernetes/${local._bkend}" }
+    provisioner "file" { source = "${local._bkendpath}", destination = "~/iac/${var.k8scfg["parm_k8sproj"]}/${local._bkend}" }
 }
 output "iacec2_info" {
     description = "Ubuntu EC2 with iac & terraform installed & Network Info"
