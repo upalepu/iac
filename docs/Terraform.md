@@ -15,9 +15,10 @@ The folder structure for this project is designed for modularity and is as follo
     - ***network*** (module for creating the virtual private cloud in AWS)
     - ***wec2*** (module for creating windows EC2 machines )
   - ***iacec2*** (creates a linux EC2 with terraform code, AWS CLI and Terraform ready for experiments)
-  - ***kubernetes*** (creates a kubernetes cluster with one master and two nodes on AWS)
   - ***ubuntu*** (creates as basic ubuntu linux EC2 machine on AWS)
   - ***winec2*** (creates a Windows Server 2016, 2012, with or without Standard or Enterprise SQL server on AWS)
+  - ***k8sgossip*** (creates a kubernetes cluster with one master and two nodes on AWS. doesn't need an external domain. the domain is created as *cluster.k8s.local*)
+  - ***kubernetes*** (creates a kubernetes cluster with one master and two nodes on AWS)
   - ***README.MD*** (This file)
 
 ***helpers*** is a special folder which contains bash scripts that can be run remotely on the EC2 machines to provision them after creation.
