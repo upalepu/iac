@@ -4,7 +4,7 @@ Note that Kubernetes needs a domain name to work properly. If you want to use th
 
 ## When using ***k8sgossip*** project
 
-If you don't have an external domain name or don't wan't to pay for it, you should use the ***k8sgossip*** project in ***iac***. This project sets up a Kubernetes cluster using the *Gossip* based protocol *[Weave Mesh](https://github.com/weaveworks/mesh)*. It allows you to play with Kubernetes without requiring an external domain name. It creates the cluster as *cluster.k8s.local*.
+If you don't have an external domain name or don't wan't to pay for it, you should use the ***k8sgossip*** project in ***iac***. This project sets up a Kubernetes cluster using the *Gossip* based protocol *[Weave Mesh](https://github.com/weaveworks/mesh)*. It allows you to play with Kubernetes without requiring an external domain name. It creates the cluster as *awsaccountalias.k8s.local*, where *awsaccountalias* is your AWS account login name.
 
 ## When using ***kubernetes*** project
 
