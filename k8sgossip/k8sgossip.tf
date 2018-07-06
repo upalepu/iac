@@ -135,7 +135,7 @@ echo -e "\n\nDeploying Kubernetes dashboard ..."
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
 
 echo -e "\n\nGetting Kubernetes master name ..."
-k8smaster=$(kubectl cluster-info | grep "Kubernetes master" | sed -r -e "s/(https.*)/\1/g")
+k8smaster=$(kubectl cluster-info | grep "Kubernetes master" | sed -r -e "s/.*(https.*)/\1/g")
 echo $k8smaster > k8smaster
 echo -e "Saving the Kubernetes master name to the file 'k8smaster' for future reference"
 echo "\n\nFrom any browser type $k8smaster/ui to access the dashboard"
