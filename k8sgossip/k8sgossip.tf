@@ -69,7 +69,8 @@ CMD
 }
 
 locals {
-    _cluster_name = "cluster.k8s.local"
+    # Using the AWS account name alias for the cluster name. 
+    _cluster_name = "${data.aws_iam_account_alias.current.account_alias}.k8s.local"
     _state = "s3://${aws_s3_bucket.s3b.id}"
 }
 resource "null_resource" "k8scluster" {
@@ -114,6 +115,40 @@ while ((!created && looplimit)); do	# Loop while create cluster fails and loopli
     ((looplimit--))
 done
 if ((!created)); then echo -e "Failed to create cluster after [$tries] tries."; exit 1; fi
+
+validated=0; tries=0; looplimit=8;	# Safety net to avoid forever loop. 
+while ((!created && looplimit)); do	# Loop while create cluster fails and looplimit non-zero.
+    ((tries++))
+    sleep 60s
+    echo -e "Validating kubernetes cluster ... [$tries]" 
+    kops validate cluster --name=${local._cluster_name} --state=${local._state}
+    if (($?)); then continue; else validated=1; fi
+    ((looplimit--))
+done
+if ((!validated)); then 
+    echo -e "Failed to validate cluster after [$tries] tries. Deleting cluster ..."
+    kops delete cluster --name=${local._cluster_name} --state=${local._state} --yes
+    exit 1 
+fi
+
+echo -e "Deploying Kubernetes dashboard ..."
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
+
+echo -e "Type 'kubectl cluster-info' to find the Kubernetes master name ..."
+echo -e "It will be something like https://api-yourawsaccountalias-k8s-local-someawsip.awsregion.elb.amazonaws.com"
+
+echo -e "From any browser type https://kubernetes-master-name/ui to access the dashboard"
+
+adminusertoken=$(kops get secrets kube --type secret -oplaintext)
+echo $adminusertoken > adminusertoken
+echo -e "When logging into the Kubernetes dashboard for the first time,"
+echo -e "username is 'admin' and password is the value in the file 'adminusertoken'."
+
+adminsvctoken=$(kops get secrets admin --type secret -oplaintext)
+echo $adminsvctoken > adminsvctoken
+echo -e "After supplying the username & password, you will get a second screen."
+echo -e "Select 'token' and provide the admin service token found in the file 'adminsvctoken'."
+
 if [[ ! -e ~/.bashrc ]]; then touch ~/.bashrc; fi
 echo -e "export NAME=${local._cluster_name}" >> ~/.bashrc   # Sets it for future
 echo -e "export KOPS_STATE_STORE=${local._state}" >> ~/.bashrc # Sets it for future
