@@ -17,7 +17,7 @@ The folder structure for this project is designed for modularity and is as follo
   - ***iacec2*** (creates a linux EC2 with terraform code, AWS CLI and Terraform ready for experiments)
   - ***ubuntu*** (creates as basic ubuntu linux EC2 machine on AWS)
   - ***winec2*** (creates a Windows Server 2016, 2012, with or without Standard or Enterprise SQL server on AWS)
-  - ***k8sgossip*** (creates a kubernetes cluster with one master and two nodes on AWS. doesn't need an external domain. the domain is created as *cluster.k8s.local*)
+  - ***k8sgossip*** (creates a kubernetes cluster with one master and two nodes on AWS and the domain is named *awsaccountalias.k8s.local*, where *awsaccountalias* is your AWS account login name)
   - ***kubernetes*** (creates a kubernetes cluster with one master and two nodes on AWS)
   - ***README.MD*** (This file)
 
