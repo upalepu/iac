@@ -117,7 +117,7 @@ done
 if ((!created)); then echo -e "Failed to create cluster after [$tries] tries."; exit 1; fi
 
 validated=0; tries=0; looplimit=8;	# Safety net to avoid forever loop. 
-while ((!created && looplimit)); do	# Loop while create cluster fails and looplimit non-zero.
+while ((!validated && looplimit)); do	# Loop while create cluster fails and looplimit non-zero.
     ((tries++))
     sleep 60s
     echo -e "Validating kubernetes cluster ... [$tries]" 
