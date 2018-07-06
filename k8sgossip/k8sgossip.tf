@@ -121,7 +121,7 @@ while ((!validated && looplimit)); do	# Loop while create cluster fails and loop
     ((tries++))
     sleep 60s
     echo -e "Validating kubernetes cluster ... [$tries]" 
-    kops validate cluster --name=${local._cluster_name} --state=${local._state}
+    kops validate cluster --name=${local._cluster_name} --state=${local._state} &>/dev/null
     if (($?)); then continue; else validated=1; fi
     ((looplimit--))
 done
@@ -131,20 +131,22 @@ if ((!validated)); then
     exit 1 
 fi
 
-echo -e "Deploying Kubernetes dashboard ..."
+echo -e "\n\nDeploying Kubernetes dashboard ..."
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
 
-echo -e "Type 'kubectl cluster-info' to find the Kubernetes master name ..."
+echo -e "\n\nType 'kubectl cluster-info' to find the Kubernetes master name ..."
 echo -e "It will be something like https://api-yourawsaccountalias-k8s-local-someawsip.awsregion.elb.amazonaws.com"
 
-echo -e "From any browser type https://kubernetes-master-name/ui to access the dashboard"
+echo -e "\n\nFrom any browser type https://kubernetes-master-name/ui to access the dashboard"
 
-adminusertoken=$(kops get secrets kube --type secret -oplaintext)
+echo -e "\n\nGetting admin user token (password) ..."
+adminusertoken=$(kops get secrets kube --state=${local._state} --type=secret -oplaintext)
 echo $adminusertoken > adminusertoken
 echo -e "When logging into the Kubernetes dashboard for the first time,"
 echo -e "username is 'admin' and password is the value in the file 'adminusertoken'."
 
-adminsvctoken=$(kops get secrets admin --type secret -oplaintext)
+echo -e "\n\nGetting admin service token ..."
+adminsvctoken=$(kops get secrets admin --state=${local._state} --type=secret -oplaintext)
 echo $adminsvctoken > adminsvctoken
 echo -e "After supplying the username & password, you will get a second screen."
 echo -e "Select 'token' and provide the admin service token found in the file 'adminsvctoken'."
