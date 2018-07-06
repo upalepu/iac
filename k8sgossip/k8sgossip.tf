@@ -134,10 +134,11 @@ fi
 echo -e "\n\nDeploying Kubernetes dashboard ..."
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
 
-echo -e "\n\nType 'kubectl cluster-info' to find the Kubernetes master name ..."
-echo -e "It will be something like https://api-yourawsaccountalias-k8s-local-someawsip.awsregion.elb.amazonaws.com"
-
-echo -e "\n\nFrom any browser type https://kubernetes-master-name/ui to access the dashboard"
+echo -e "\n\nGetting Kubernetes master name ..."
+k8smaster=$(kubectl cluster-info | grep "Kubernetes master" | sed -r -e "s/(https.*)/\1/g")
+echo $k8smaster > k8smaster
+echo -e "Saving the Kubernetes master name to the file 'k8smaster' for future reference"
+echo "\n\nFrom any browser type $k8smaster/ui to access the dashboard"
 
 echo -e "\n\nGetting admin user token (password) ..."
 adminusertoken=$(kops get secrets kube --state=${local._state} --type=secret -oplaintext)
