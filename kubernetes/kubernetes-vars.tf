@@ -17,5 +17,7 @@ variable "k8scfg" {
         parm_nodes = "2"
         parm_nodetype = "t2.micro"
         parm_mastertype = "t2.micro"
+#        parm_pvsize = "10"  # in GB
+#        parm_pvtype = "gp2" # Can be gp2, io1, sc1, or st1. 
     }
 }
