@@ -67,7 +67,9 @@ CMD
         interpreter = [ "/bin/bash", "-c" ]
     }
 }
-
+data "local_file" "vpc" { filename = "./vpc" }    # data.local_file.vpc.content contains the vpcid
+#data "local_file" "vpccidr" { filename = "./vpccidr" }    # data.local_file.vpccidr.content contains the vpccidr
+data "aws_vpc" "iacec2vpc" { id = "${data.local_file.vpc.content}" }    # Will contain the proper vpc id
 locals {
     # Using the AWS account name alias for the cluster name. 
     _cluster_name = "${data.aws_iam_account_alias.current.account_alias}.k8s.local"
@@ -76,6 +78,8 @@ locals {
 resource "null_resource" "k8scluster" {
     triggers {
         k8sc_s3b_name = "${aws_s3_bucket.s3b.id}"
+        vpcid = "${data.aws_vpc.iacec2vpc.id}"
+#        vpccidr = "${data.local_file.vpccidr.content}"
     }
     
     provisioner "local-exec" {
@@ -105,6 +109,8 @@ while ((!created && looplimit)); do	# Loop while create cluster fails and loopli
     --node-size=${var.k8scfg["parm_nodetype"]} \
     --master-size=${var.k8scfg["parm_mastertype"]} \
     --dns-zone=${local._cluster_name} \
+    --vpc=${data.aws_vpc.iacec2vpc.id} \
+    --network-cidr=${data.aws_vpc.iacec2vpc.cidr_block} \
     --yes
     if (($?)); then 
         echo -e "Create cluster failed. Deleting cluster ..."
@@ -121,7 +127,7 @@ validated=0; tries=0; looplimit=8;	# Safety net to avoid forever loop.
 while ((!validated && looplimit)); do	# Loop while create cluster fails and looplimit non-zero.
     ((tries++))
     sleep 60s
-    kops validate cluster --name=${local._cluster_name} --state=${local._state} 2>/dev/null
+    kops validate cluster --name=${local._cluster_name} --state=${local._state} &>/dev/null
     if ((!$?)); then validated=1; else echo -e "Retrying [$tries] validation of kubernetes cluster ... "; continue; fi
     ((looplimit--))
 done
@@ -129,6 +135,8 @@ if ((!validated)); then
     echo -e "Failed to validate cluster after [$tries] tries. Deleting cluster ..."
     kops delete cluster --name=${local._cluster_name} --state=${local._state} --yes
     exit 1
+else
+    echo -e "Validation succeeded after [$tries] tries."
 fi
 
 echo -e "\n\nDeploying Kubernetes dashboard ..."
