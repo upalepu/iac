@@ -48,7 +48,24 @@ resource "aws_s3_bucket" "s3b" {
         enabled = "${var.k8scfg["parm_versioning"]}"
     }
 }
-
+/* EXPERIMENTAL
+locals {
+    ebsvol_az = "${var.k8scfg["parm_region"]}a" # Converting region (e.g us-east-1) to AZ (e.g. us-east-1a)
+}
+# Used by the Kubernetes cluster for PersistentVolume if any pods need it. 
+# Note: This will go away when the cluster is taken down.  
+resource "aws_ebs_volume" "ebsvol" {
+    depends_on = ["null_resource.k8scluster"]
+    availability_zone = "${local.ebsvol.az}"
+    size = "${var.k8scfg["parm_pvsize"]}"
+    type = "${var.k8scfg["parm_pvtype"]}"
+    tags {
+        Name = "${var.k8scfg["tags_project"]}-ebs-pv"
+        Project = "${var.k8scfg["tags_project"]}"
+        Provider = "${var.k8scfg["tags_provider"]}"
+    }
+}
+*/
 resource "null_resource" "kops" {
     triggers {
         s3b_id = "${aws_s3_bucket.s3b.id}"
@@ -125,8 +142,8 @@ ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa; if (($?)); then exit 1; fi
 created=0; tries=0; looplimit=5;	# Safety net to avoid forever loop. 
 while ((!created && looplimit)); do	# Loop while create cluster fails and looplimit non-zero.
     ((tries++))
-    sleep 20s
     echo -e "Creating kubernetes cluster ... [$tries]" 
+    sleep 20s
     kops create cluster \
     --cloud=aws \
     --name=${local._cluster_name} \
@@ -146,6 +163,43 @@ while ((!created && looplimit)); do	# Loop while create cluster fails and loopli
     ((looplimit--))
 done
 if ((!created)); then echo -e "Failed to create cluster after [$tries] tries."; exit 1; fi
+
+echo -e "Validating kubernetes cluster. This might take a few minutes, please wait ..." 
+validated=0; tries=0; looplimit=8;	# Safety net to avoid forever loop. 
+while ((!validated && looplimit)); do	# Loop while create cluster fails and looplimit non-zero.
+    ((tries++))
+    sleep 60s
+    kops validate cluster --name=${local._cluster_name} --state=${local._state} 2>/dev/null
+    if ((!$?)); then validated=1; else echo -e "Retrying [$tries] validation of kubernetes cluster ... "; continue; fi
+    ((looplimit--))
+done
+if ((!validated)); then 
+    echo -e "Failed to validate cluster after [$tries] tries. Deleting cluster ..."
+    kops delete cluster --name=${local._cluster_name} --state=${local._state} --yes
+    exit 1
+fi
+
+echo -e "\n\nDeploying Kubernetes dashboard ..."
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
+
+echo -e "\n\nGetting Kubernetes master name ..."
+k8smaster=$(kubectl cluster-info | grep "Kubernetes master" | sed -r -e "s/.*(https.*)/\1/g")
+echo $k8smaster > k8smaster
+echo -e "Saving the Kubernetes master name to the file 'k8smaster' for future reference"
+echo -e "\n\nFrom any browser type $k8smaster/ui to access the dashboard"
+
+echo -e "\n\nGetting admin user token (password) ..."
+adminusertoken=$(kops get secrets kube --state=${local._state} --type=secret -oplaintext)
+echo $adminusertoken > adminusertoken
+echo -e "When logging into the Kubernetes dashboard for the first time,"
+echo -e "username is 'admin' and password is the value in the file 'adminusertoken'."
+
+echo -e "\n\nGetting admin service token ..."
+adminsvctoken=$(kops get secrets admin --state=${local._state} --type=secret -oplaintext)
+echo $adminsvctoken > adminsvctoken
+echo -e "After supplying the username & password, you will get a second screen."
+echo -e "Select 'token' and provide the admin service token found in the file 'adminsvctoken'."
+
 if [[ ! -e ~/.bashrc ]]; then touch ~/.bashrc; fi
 echo -e "export NAME=${local._cluster_name}" >> ~/.bashrc   # Sets it for future
 echo -e "export KOPS_STATE_STORE=${local._state}" >> ~/.bashrc # Sets it for future
@@ -186,6 +240,7 @@ output "k8scfg" {
         s3b_id = "${aws_s3_bucket.s3b.id}"
         s3b_arn = "${aws_s3_bucket.s3b.arn}"
         s3b_region = "${aws_s3_bucket.s3b.region}"
+#        ebsvol_id = "${aws_ebs_volume.ebsvol.id}"
     }
 }
 
