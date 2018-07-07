@@ -49,7 +49,6 @@ locals {
     # Creating command line for setting up aws cli with id= & secret=
     # Note: This cmd assumes setupawscli is in current directory. 
     _cmd = "${format("./setupawscli.sh id=%s secret=%s", "${aws_iam_access_key.cak.id}", "${aws_iam_access_key.cak.secret}")}"
-    _setupawsclicmd = [ "${local._cmd}" ]
     _bkend = "tfs3b.cfg" 
     _bkendpath = "./${local._bkend}"
     _tfstatekeypath = "kubernetes/terraform.tfstate"
@@ -57,6 +56,11 @@ locals {
     # Note: The escaped dbl quotes surrounding each of the %s format types are necessary for 
     # being output as-is into the bkend cfg file   
     _cmd2 = "${format("bucket = \"%s\"\nkey = \"%s\"\nregion = \"%s\"", local._s3bucket, local._tfstatekeypath, var.region)}"
+    _addlcmds = [
+        "echo  ${module.myvpc.vpc_id} > ~/iac/${var.k8scfg["parm_k8sproj"]}/vpc",
+        "${local._cmd}" 
+    ]
+
 }
 
 data "aws_iam_account_alias" "current" {}
@@ -119,9 +123,9 @@ module "iacec2" {
     additional_volumes = "${var.additional_volumes}"
     files_to_copy = "${var.files_to_copy}"
     # In addition to the commands specified in the vars file, we're also appending
-    # the setupawscli cmd. Note that it expects the pwd to be in the helpers
+    # a couple of addl cmds. the setupawscli cmd and the vpc file create cmd.
     # directory.  
-    remote_commands = "${concat("${var.remote_commands}","${local._setupawsclicmd}")}"
+    remote_commands = "${concat("${var.remote_commands}","${local._addlcmds}")}"
 }
 
 # This resource creates the file which contains the backend config data for terraform
