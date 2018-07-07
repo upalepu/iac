@@ -130,6 +130,11 @@ output "network_info" {
 	} 
 }
 
+output "vpc_id" {
+	description = "AWS VPC ID"
+	value = "${aws_vpc.vpc.id}"
+}
+
 output "security_group" {
 	description = "AWS Security Group."
 	value = "${aws_security_group.security_group.id}"
