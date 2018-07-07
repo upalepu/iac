@@ -94,8 +94,8 @@ ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa; if (($?)); then exit 1; fi
 created=0; tries=0; looplimit=5;	# Safety net to avoid forever loop. 
 while ((!created && looplimit)); do	# Loop while create cluster fails and looplimit non-zero.
     ((tries++))
-    sleep 20s
     echo -e "Creating kubernetes cluster ... [$tries]" 
+    sleep 20s
     kops create cluster \
     --cloud=aws \
     --name=${local._cluster_name} \
@@ -116,19 +116,19 @@ while ((!created && looplimit)); do	# Loop while create cluster fails and loopli
 done
 if ((!created)); then echo -e "Failed to create cluster after [$tries] tries."; exit 1; fi
 
+echo -e "Validating kubernetes cluster. This might take a few minutes, please wait ..." 
 validated=0; tries=0; looplimit=8;	# Safety net to avoid forever loop. 
 while ((!validated && looplimit)); do	# Loop while create cluster fails and looplimit non-zero.
     ((tries++))
     sleep 60s
-    echo -e "Validating kubernetes cluster ... [$tries]" 
-    kops validate cluster --name=${local._cluster_name} --state=${local._state} &>/dev/null
-    if (($?)); then continue; else validated=1; fi
+    kops validate cluster --name=${local._cluster_name} --state=${local._state} 2>/dev/null
+    if ((!$?)); then validated=1; else echo -e "Retrying [$tries] validation of kubernetes cluster ... "; continue; fi
     ((looplimit--))
 done
 if ((!validated)); then 
     echo -e "Failed to validate cluster after [$tries] tries. Deleting cluster ..."
     kops delete cluster --name=${local._cluster_name} --state=${local._state} --yes
-    exit 1 
+    exit 1
 fi
 
 echo -e "\n\nDeploying Kubernetes dashboard ..."
@@ -138,7 +138,7 @@ echo -e "\n\nGetting Kubernetes master name ..."
 k8smaster=$(kubectl cluster-info | grep "Kubernetes master" | sed -r -e "s/.*(https.*)/\1/g")
 echo $k8smaster > k8smaster
 echo -e "Saving the Kubernetes master name to the file 'k8smaster' for future reference"
-echo "\n\nFrom any browser type $k8smaster/ui to access the dashboard"
+echo -e "\n\nFrom any browser type $k8smaster/ui to access the dashboard"
 
 echo -e "\n\nGetting admin user token (password) ..."
 adminusertoken=$(kops get secrets kube --state=${local._state} --type=secret -oplaintext)
