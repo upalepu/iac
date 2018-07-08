@@ -109,9 +109,7 @@ while ((!created && looplimit)); do	# Loop while create cluster fails and loopli
     --dns-zone=${local._cluster_name} \
     --vpc=${data.aws_vpc.iacec2vpc.id} \
     --network-cidr=${data.aws_vpc.iacec2vpc.cidr_block} \
-    --networking=weave \
-    --topology=private \
-    --bastion="true" \
+    --networking=amazon-vpc-routed-eni \
     --yes
     if (($?)); then 
         echo -e "Create cluster failed. Deleting cluster ..."
@@ -129,7 +127,7 @@ while ((!validated && looplimit)); do	# Loop while create cluster fails and loop
     ((tries++))
     sleep 60s
     kops validate cluster --name=${local._cluster_name} --state=${local._state} &>/dev/null
-    if ((!$?)); then validated=1; else echo -e "Retrying [$tries] validation of kubernetes cluster ... "; continue; fi
+    if ((!$?)); then validated=1; else echo -e "Retrying [$tries] validation of kubernetes cluster ... "; fi
     ((looplimit--))
 done
 if ((!validated)); then 
