@@ -109,6 +109,9 @@ while ((!created && looplimit)); do	# Loop while create cluster fails and loopli
     --dns-zone=${local._cluster_name} \
     --vpc=${data.aws_vpc.iacec2vpc.id} \
     --network-cidr=${data.aws_vpc.iacec2vpc.cidr_block} \
+    --networking=weave \
+    --topology=private \
+    --bastion="true" \
     --yes
     if (($?)); then 
         echo -e "Create cluster failed. Deleting cluster ..."
