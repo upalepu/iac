@@ -68,7 +68,6 @@ CMD
     }
 }
 data "local_file" "vpc" { filename = "./vpc" }    # data.local_file.vpc.content contains the vpcid
-#data "local_file" "vpccidr" { filename = "./vpccidr" }    # data.local_file.vpccidr.content contains the vpccidr
 data "aws_vpc" "iacec2vpc" { id = "${data.local_file.vpc.content}" }    # Will contain the proper vpc id
 locals {
     # Using the AWS account name alias for the cluster name. 
@@ -79,7 +78,6 @@ resource "null_resource" "k8scluster" {
     triggers {
         k8sc_s3b_name = "${aws_s3_bucket.s3b.id}"
         vpcid = "${data.aws_vpc.iacec2vpc.id}"
-#        vpccidr = "${data.local_file.vpccidr.content}"
     }
     
     provisioner "local-exec" {
