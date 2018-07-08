@@ -174,7 +174,7 @@ while ((!validated && looplimit)); do	# Loop while create cluster fails and loop
     ((tries++))
     sleep 60s
     kops validate cluster --name=${local._cluster_name} --state=${local._state} &>/dev/null
-    if ((!$?)); then validated=1; else echo -e "Retrying [$tries] validation of kubernetes cluster ... "; continue; fi
+    if ((!$?)); then validated=1; else echo -e "Retrying [$tries] validation of kubernetes cluster ... "; fi
     ((looplimit--))
 done
 if ((!validated)); then 
