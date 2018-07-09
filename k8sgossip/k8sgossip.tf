@@ -80,7 +80,7 @@ data "local_file" "vpc" { filename = "./vpc" }    # data.local_file.vpc.content 
 data "aws_vpc" "iacec2vpc" { id = "${data.local_file.vpc.content}" }    # Will contain the proper vpc id
 locals {
     # Using the AWS account name alias for the cluster name. 
-    _cluster_name = "${data.aws_iam_account_alias.current.account_alias}.k8s.local"
+    _cluster_name = "${var.k8scfg["parm_subdomain"]}.${var.k8scfg["parm_domain"]}"
     _state = "s3://${aws_s3_bucket.s3b.id}"
 }
 resource "null_resource" "k8scluster" {
