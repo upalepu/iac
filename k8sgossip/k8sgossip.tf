@@ -5,6 +5,15 @@ provider "aws" {
 }
 
 terraform { backend "s3" {} }
+resource "aws_route53_zone" "pvthz" {
+    name = "${var.k8scfg["parm_subdomain"]}.${var.k8scfg["parm_domain"]}"
+    comment = "${var.k8scfg["parm_comment"]}"
+    tags {
+        Name = "${var.k8scfg["tags_project"]}-pvthz"
+        Project = "${var.k8scfg["tags_project"]}"
+        Provider = "${var.k8scfg["tags_provider"]}"
+    }
+}
 data "aws_iam_account_alias" "current" {}
 resource "aws_s3_bucket" "s3b" {
     bucket = "${data.aws_iam_account_alias.current.account_alias}-${var.k8scfg["tags_project"]}-state"
@@ -75,9 +84,11 @@ locals {
     _state = "s3://${aws_s3_bucket.s3b.id}"
 }
 resource "null_resource" "k8scluster" {
+    depends_on = [ "aws_route53_zone.pvthz" ]
     triggers {
         k8sc_s3b_name = "${aws_s3_bucket.s3b.id}"
         vpcid = "${data.aws_vpc.iacec2vpc.id}"
+        pvthzid = "${aws_route53_zone.pvthz.zone_id}"
     }
     
     provisioner "local-exec" {
@@ -161,6 +172,17 @@ echo -e "Select 'token' and provide the admin service token found in the file 'a
 if [[ ! -e ~/.bashrc ]]; then touch ~/.bashrc; fi
 echo -e "export NAME=${local._cluster_name}" >> ~/.bashrc   # Sets it for future
 echo -e "export KOPS_STATE_STORE=${local._state}" >> ~/.bashrc # Sets it for future
+
+echo -e "Setting up kubectl completion ..."
+kubectl completion bash > ~/.kube/kctl.completion
+source ~/.kube/kctl.completion
+echo -e "source ~/.kube/kctl.completion" >> ~/.bashrc # Sets it for future
+
+echo -e "Setting up kops completion ..."
+kops completion bash > ~/.kube/kops.completion
+source ~/.kube/kops.completion
+echo -e "source ~/.kube/kops.completion" >> ~/.bashrc # Sets it for future
+
 CMD
         interpreter = [ "/bin/bash", "-c" ] 
     }
