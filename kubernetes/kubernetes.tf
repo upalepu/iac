@@ -209,6 +209,17 @@ echo -e "Select 'token' and provide the admin service token found in the file 'a
 if [[ ! -e ~/.bashrc ]]; then touch ~/.bashrc; fi
 echo -e "export NAME=${local._cluster_name}" >> ~/.bashrc   # Sets it for future
 echo -e "export KOPS_STATE_STORE=${local._state}" >> ~/.bashrc # Sets it for future
+
+echo -e "Setting up kubectl completion ..."
+kubectl completion bash > ~/.kube/kctl.completion
+source ~/.kube/kctl.completion
+echo -e "source ~/.kube/kctl.completion" >> ~/.bashrc # Sets it for future
+
+echo -e "Setting up kops completion ..."
+kops completion bash > ~/.kube/kops.completion
+source ~/.kube/kops.completion
+echo -e "source ~/.kube/kops.completion" >> ~/.bashrc # Sets it for future
+
 CMD
         interpreter = [ "/bin/bash", "-c" ] 
     }
