@@ -34,8 +34,9 @@ data "external" "subhz_nsrecords" {
     }
     # Results are returned in "result" attribute
 }
+data "aws_iam_account_alias" "current" {}
 resource "aws_s3_bucket" "s3b" {
-    bucket = "${replace(var.k8scfg["parm_domain"],"/\\..*/","")}-${var.k8scfg["tags_project"]}-state"
+    bucket = "${data.aws_iam_account_alias.current.account_alias}-${var.k8scfg["tags_project"]}-state"
     acl    = "private"
     force_destroy = "true"
     region = "${var.k8scfg["parm_region"]}"
