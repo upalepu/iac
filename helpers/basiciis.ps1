@@ -1,5 +1,7 @@
 # This script installs IIS and the features required to run asp.net applications
 
+Start-Process powershell -Verb runAs
+
 # * Make sure you run this script from an Admin Prompt!
 # * Make sure Powershell Execution Policy is bypassed to run these scripts:
 # * YOU MAY HAVE TO RUN THIS COMMAND PRIOR TO RUNNING THIS SCRIPT!
