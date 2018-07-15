@@ -57,7 +57,7 @@ locals {
     # being output as-is into the bkend cfg file   
     _cmd2 = "${format("bucket = \"%s\"\nkey = \"%s\"\nregion = \"%s\"", local._s3bucket, local._tfstatekeypath, var.region)}"
     _addlcmds = [
-        "echo  ${module.myvpc.vpc_id} > ~/iac/${var.k8scfg["parm_k8sproj"]}/vpc",
+        "echo -n ${module.myvpc.vpc_id} > ~/iac/${var.k8scfg["parm_k8sproj"]}/vpc",
         "${local._cmd}" 
     ]
 
