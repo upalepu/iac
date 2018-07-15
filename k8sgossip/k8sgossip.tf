@@ -5,9 +5,11 @@ provider "aws" {
 }
 
 terraform { backend "s3" {} }
+data "local_file" "vpcid" { filename = "./vpc" } # content contains the vpc id. 
 resource "aws_route53_zone" "pvthz" {
     name = "${var.k8scfg["parm_subdomain"]}.${var.k8scfg["parm_domain"]}"
     comment = "${var.k8scfg["parm_comment"]}"
+    vpc_id = "${data.local_file.vpcid.content}"
     tags {
         Name = "${var.k8scfg["tags_project"]}-pvthz"
         Project = "${var.k8scfg["tags_project"]}"
