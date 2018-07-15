@@ -12,7 +12,7 @@ variable "ec2_type" { default = "t2.small" }
 
 variable "ver" { default = "16" }
 variable "username" { default = "ubuntu" }
-variable "rootvol" { default = { type = "gp2", size = "15", delete_on_termination = "true" } }
+variable "rootvol" { default = { type = "gp2", size = "30", delete_on_termination = "true" } }
 
 variable "additional_volumes" { default = [] }
 variable "files_to_copy" { default = [] }
