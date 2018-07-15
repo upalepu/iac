@@ -14,5 +14,11 @@ variable "db" { default = "none" }
 variable "username" { default = "Administrator" }
 variable "rootvol" { type = "map", default = { type = "gp2", size = "40", delete_on_termination = "true" } }
 variable "additional_volumes" { type = "list", default = [] }
-variable "files_to_copy" { type = "list", default = [] }
-variable "remote_commands" { type = "list", default = [] }
+variable "files_to_copy" { type = "list", default = [ { source = "../helpers/basiciis.ps1", destination = "c:\\basiciis.ps1" } ] }
+variable "remote_commands" { 
+    type = "list", 
+    default = [
+        "cd c:\\",
+        "powershell c:\\basiciis.ps1"
+    ] 
+}
