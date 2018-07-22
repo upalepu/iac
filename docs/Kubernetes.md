@@ -55,6 +55,8 @@ iac
 
 ### <a name="cfg"></a>Configure
 
+#### If using ***kubernetes*** project
+
 - Change to ***iac/kubernetes*** and using your favorite editor (nano or vi) create a new file  ***terraform.tfvars*** and add the name of your hosted domain as shown below.  
 
 ```bash
@@ -69,6 +71,12 @@ k8scfg = {
         parm_domain = "yourdomain.ext"
 }
 ```
+
+- Continue to the step for setting up Terraform below.
+
+#### If using ***k8sgossip*** project
+
+- Change to ***iac/k8sgossip*** and verify that the *vpc* file is existing in the folder. This file contains the VPC Id of the VPC in which the ***iacec2*** machine was created.
 
 Next, setup Terraform to store its state remotely in the AWS s3 bucket. The S3 bucket was already created for you when you created the ***iacec2*** machine. All the configuration information was added to the ***tfs3b.cfg*** file which was uploaded as a part of the ***iacec2*** project.
 
@@ -87,7 +95,23 @@ drwxrwxr-x 10 ubuntu ubuntu 4096 Jun 23 02:35 ..
 ubuntu@ip-10-0-1-42:~/iac/kubernetes$
 ```
 
-- Now, at the bash prompt, type type the following command ***kubernetes$ terraform init -backend-config=tfs3b.cfg*** and let Terraform take care of the rest. The output will be as below if it succeeded, details have been omitted for brevity.
+- If you are using the ***k8sgossip*** project, check the ***iac/k8sgossip*** directory for this file. The directory listing should show the ***tfs3b.cfg*** file.
+
+```bash
+ubuntu@ip-10-0-1-42:~/iac/k8sgossip$ ls -al
+total 36
+drwxrwxr-x  3 ubuntu ubuntu 4096 Jun 23 02:40 .
+drwxrwxr-x 10 ubuntu ubuntu 4096 Jun 23 02:35 ..
+-rw-rw-r--  1 ubuntu ubuntu 7410 Jun 23 02:35 k8sgossip.tf
+-rw-rw-r--  1 ubuntu ubuntu  863 Jun 23 02:35 k8sgossip-vars.tf
+-rw-r--r--  1 ubuntu ubuntu  107 Jun 23 02:35 tfs3b.cfg
+-rw-r--r--  1 ubuntu ubuntu  107 Jun 23 02:35 vpc
+ubuntu@ip-10-0-1-42:~/iac/k8sgossip$
+```
+
+- Now, at the bash prompt, type type the following command ***terraform init -backend-config=tfs3b.cfg*** and let Terraform take care of the rest. The output will be as below if it succeeded, details have been omitted for brevity.
+
+NOTE: The same command should be used if you're using the ***k8sgossip*** project.
 
 ```bash
 ubuntu@ip-10-0-1-42:~/iac/kubernetes$ terraform init -backend-config=tfs3b.cfg
