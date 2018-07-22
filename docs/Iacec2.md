@@ -31,6 +31,16 @@ private_key_path = "~/.ssh/my_aws_private_key.pem"
 key_name = "my_aws_key"
 ```
 
+NOTE: If you wish to use either the ***kubernetes*** or ***k8sgossip*** project, you will need to make sure you set the *parm_k8sproj* variable in the *k8scfg* map. By default this variable is set to ***k8sgossip***, so you don't have to do anything here. This means, when you login to the ***iacec2*** machine, you can use the ***k8sgossip*** project to create your Kubernetes cluster. This is the correct choice if you do not have an external domain configured either in AWS or by a 3rd party DNS service. See [Domains](./Domains.md) for more details on this. If you have an external domain name in AWS Route53 or with a 3rd party DNS service like GoDaddy and you want to create your Kubernete cluster as a subdomain under that domain, then you can change the *parm_k8sproj* variable as shown below.  
+
+- To change the *parm_k8sproj* variable to *kubernetes*, simply add the following to the ***terraform.tfvars*** file created earlier.
+
+```bash
+k8scfg = {
+  parm_k8sproj = "kubernetes"
+}
+```
+
 - Save your configuration and go to [Create.](#create)
 
 ### <a name="create"></a>Create
@@ -105,6 +115,8 @@ ubuntu@ubuntu:~/iac/iacec2$
 ```
 
 Your AWS EC2 iacec2 machine is now created and ready for use. To verify that the machine is available, SSH into the machine from a bash command prompt and verify that the machine is up and running. You can now go on to do other Terraform related projects or any other projects you wish to. When you are done and want to destroy this machine and its related infrastructure, go to the [Destroy](#destroy) section and follow the steps listed there.
+
+NOTE: If you are interested in creating a Kubernetes cluster using the ***k8sgossip*** or ***kubernetes*** projects, make sure you read the information in the [Configure](#cfg) section carefully to know which project to use. This is because for an internal domain, the VPC id is needed and the ***iacec2*** project provides that information in a file called *vpc* if the project is set to ***k8sgossip***.
 
 ### <a name="destroy"></a>Destroy
 
