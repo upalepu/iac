@@ -165,7 +165,7 @@ resource "null_resource" "lfcp" {
     }
     connection {
         host = "${element(aws_instance.ec2.*.public_ip,count.index)}"
-        type = "${local.type}"
+        type = "ssh"
         user = "${var.username}" 
         private_key = "${file(var.private_key_path)}" 
     }
