@@ -107,6 +107,14 @@ DESCRIPTION
         "12-us-east-1" = "ami-a04529b6"
         "14-us-east-1" = "ami-c29e1cb8"
         "16-us-east-1" = "ami-aa2ea6d0"
+        "16-us-east-2" = "ami-0782e9ee97725263d"
+        "18-us-east-2" = "ami-0f65671a86f061fcd"
+        "14-us-west-2" = "ami-09bfeda7337019518"
+        "16-us-west-2" = "ami-0e32ec5bc225539f5"
+        "18-us-west-2" = "ami-0bbe6b35405ecebdb"
+        "14-us-west-1" = "ami-00048435fed26a8d1"
+        "16-us-west-1" = "ami-0ad16744583f21877"
+        "18-us-west-1" = "ami-063aa838bd7631e0b"
     }
 }
 locals {
