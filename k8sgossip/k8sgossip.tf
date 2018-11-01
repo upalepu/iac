@@ -184,6 +184,7 @@ echo -e "Setting up kops completion ..."
 kops completion bash > ~/.kube/kops.completion
 source ~/.kube/kops.completion
 echo -e "source ~/.kube/kops.completion" >> ~/.bashrc # Sets it for future
+echo -e "Don't forget - ssh into master and worker requires the pvt [id_rsa] key in ~/.ssh and the [admin] user name."
 
 CMD
         interpreter = [ "/bin/bash", "-c" ] 
