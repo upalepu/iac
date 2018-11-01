@@ -168,3 +168,13 @@ region = "us-east-1"
 ```
 
 ---
+When ***terraform apply or terraform init*** is run and you get the following error:
+
+```bash
+ubuntu@ubuntu:~/iac/iacec2$ terraform apply
+* module.iacec2.aws_instance.ec2: lookup: lookup failed to find '16-us-west-2' in: ${lookup(var.amis,local.ami_key)}
+```
+
+This usually happens if there is no AMI available for the specified region or specified version. Check the ec2.tf file in the modules folder and add an appropriate AMI from AWS. Currently AMIs for us-east-1, us-east-2, us-west-1 and us-west-2 are included.
+
+---
