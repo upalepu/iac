@@ -8,11 +8,8 @@ Name|Cloud Platform|Artifact(s)|Status|Description
 ---|---|---|---|---
 [ubuntu](./docs/Ubuntu.md)|AWS|EC2|Stable|Ubuntu EC2 machine in isolated VPC with SSH access
 [winec2](./docs/Windows.md)|AWS|EC2, SQL Server (if specified)|Stable|Windows EC2 machine in isolated VPC with RDP access
-[iacec2](./docs/Iacec2.md)|AWS|EC2, AWS Command Line, Terraform, iac project|Stable|Ubuntu EC2 in isolated VPC for developing/testing iac/terraform/kubernetes
-[k8sgossip](./docs/Kubernetes.md)|AWS|AWS Environment, Kubernetes Cluster, kops, kubectl|Stable|Sets up AWS and a Kubernetes cluster on (iacec2) for development/testing. **No external domain needed.**
-[kubernetes](./docs/Kubernetes.md)|AWS|AWS Environment, Kubernetes Cluster, kops, kubectl|Stable|Sets up AWS and a Kubernetes cluster on (iacec2) for development/testing. **External domain name needed.**
 
-To try out creating your own infrastructure using code, either clone this project using git or download it to your local machine and try it out. For more advanced projects like ***kubernetes***, first create an AWS EC2 machine using the ***iacec2*** project and try your projects there so you can have a clean and disposable environment.
+To try out creating your own infrastructure using code, either clone this project using git or download it to your local machine and try it out.
 
 ```bash
 ubuntu@ubuntu:~$git clone https://github.com/upalepu/iac.git
@@ -26,21 +23,15 @@ For details on creating Ubuntu machines on AWS click [here.](./docs/Ubuntu.md)
 
 ---
 
+## <a name="winec2"></a>*Windows EC2s on AWS*
+
+For details on creating Windows machines on AWS click [here.](./docs/Windows.md)
+
+---
+
 ## <a name="tfo"></a>*Folder structure and Terraform usage overview*
 
 For a brief overview ofthe folder structure in this project and Terrafrom click [here.](./docs/Terraform.md)
-
----
-
-## <a name="iacec2"></a>*Develop/Test IAC with Terraform/Kubernetes on AWS EC2 (iacec2)*
-
-For details on creating a Dev/Test environment with Terraform, Kubernetes and AWS command line on an AWS EC2 machine click [here.](./docs/Iacec2.md)
-
----
-
-## <a name="kubernetes"></a>*Kubernetes Cluster on AWS*
-
-For details on setting up and using a Kubernetes Cluster on AWS using the (iacec2) machine click [here.](./docs/Kubernetes.md)
 
 ---
 
