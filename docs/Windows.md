@@ -131,7 +131,7 @@ Now that you are ready to destroy your newly created infrastructure, follow the 
 - Change to the ***iac/winec2*** folder at your bash (command) prompt and type ***terraform destroy***.
 
 ```bash
-ubuntu@ubuntu:~/iac/ubuntu$ terraform apply
+ubuntu@ubuntu:~/iac/ubuntu$ terraform destroy
 ```
 
 When prompted, type ***yes*** after making sure that the number of items being destroyed matches the number of items created. You will see the result of the command similar to what is shown below. For brevity, most of the output is not shown.
