@@ -14,7 +14,6 @@ The folder structure for this project is designed for modularity and is as follo
     - ***ec2*** (module for creating linux EC2 machines)
     - ***network*** (module for creating the virtual private cloud in AWS)
     - ***wec2*** (module for creating windows EC2 machines )
-  - ***iacec2*** (creates a linux EC2 with terraform code, AWS CLI and Terraform ready for experiments)
   - ***ubuntu*** (creates as basic ubuntu linux EC2 machine on AWS)
   - ***winec2*** (creates a Windows Server 2016, 2012, with or without Standard or Enterprise SQL server on AWS)
   - ***README.MD*** (The main readme file for this project)
