@@ -56,10 +56,10 @@ variable "ver" {
     description = <<DESCRIPTION
 Server OS version info. 
 For Linux since we are only using ubuntu variants, the valid versions are
-12,14,16 - corresponding to ubuntu 12.04, 14.04 and 16.04.
+12,14,16,18 - corresponding to ubuntu 12.04, 14.04, 16.04 and 18.04.
 The default setting is 16 (ubuntu 16.04)
 NOTE: That 12.04 is no longer supported by the ubuntu org, so it is recommended that
-ubuntu 16.04 is used. 
+ubuntu 16.04 or 18.04 is used. 
 DESCRIPTION
     default = "16"
 }
@@ -104,17 +104,33 @@ AMIs for Linuxbased on region. For Linux the coding of the key is <ver>-<region>
 NOTE: The AMIs in this list are all picked with the above attributes.
 DESCRIPTION
     default = { 
-        "12-us-east-1" = "ami-a04529b6"
-        "14-us-east-1" = "ami-c29e1cb8"
-        "16-us-east-1" = "ami-aa2ea6d0"
-        "16-us-east-2" = "ami-0782e9ee97725263d"
-        "18-us-east-2" = "ami-0f65671a86f061fcd"
-        "14-us-west-2" = "ami-09bfeda7337019518"
-        "16-us-west-2" = "ami-0e32ec5bc225539f5"
-        "18-us-west-2" = "ami-0bbe6b35405ecebdb"
-        "14-us-west-1" = "ami-00048435fed26a8d1"
-        "16-us-west-1" = "ami-0ad16744583f21877"
-        "18-us-west-1" = "ami-063aa838bd7631e0b"
+#        "12-us-east-1" = "ami-2f442839" # ebs, hvm
+#        "12-us-east-1" = "ami-024a2614" # ebs-io1, hvm
+        "12-us-east-1" = "ami-a04529b6" # ebs-ssd, hvm
+#        "12-us-west-1" = "ami-a0b89fc0" # ebs, hvm
+#        "12-us-west-1" = "ami-a1b89fc1" # ebs-io1, hvm
+        "12-us-west-1" = "ami-aeb99ece" # ebs-ssd, hvm
+#        "12-us-west-2" = "ami-830c94e3" # ebs, hvm
+#        "12-us-west-2" = "ami-fc0b939c" # ebs-io1, hvm
+        "12-us-east-2" = "ami-270f9747" # ebs-ssd, hvm
+#        "14-us-east-1" = "ami-0287bc2dcd65958a0" # ebs, hvm
+#        "14-us-east-1" = "ami-05087b409cedf1229" # ebs-io1, hvm
+        "14-us-east-1" = "ami-067d76d1273765ecf" # ebs-ssd, hvm
+#        "14-us-west-1" = "ami-0cb0e9fe779689eb3" # ebs, hvm
+#        "14-us-west-1" = "ami-0ab62b6e3bce367eb" # ebs-io1, hvm
+        "14-us-west-1" = "ami-0613abfb3a3791dae" # ebs-ssd, hvm
+#        "14-us-west-2" = "ami-0963cda75bb7f2605" # ebs, hvm
+#        "14-us-west-2" = "ami-0bf3da3a09b06a261" # ebs-io1, hvm
+        "14-us-west-2" = "ami-042122b99731161ed" # ebs-ssd, hvm
+        "16-us-east-1" = "ami-06d990a360d7a793c"	# ebs-ssd, hvm
+        "16-us-west-1" = "ami-0f1d0daf2937d0064"	# ebs-ssd, hvm
+        "16-us-west-2" = "ami-0b4a4b368aa8bd6f0"	# ebs-ssd, hvm
+#        "16-us-east-2" = "ami-be7753db"	# ebs-io1, hvm
+        "16-us-east-2" = "ami-0c8b8e32659017cc5"	# ebs-ssd, hvm
+        "18-us-east-1" = "ami-07025b83b4379007e"	# ebs-ssd, hvm
+        "18-us-west-1" = "ami-0ea0e2d21f93aa6c9"	# ebs-ssd, hvm
+        "18-us-east-2" = "ami-026f49896b1af2759"	# ebs-ssd, hvm
+        "18-us-west-2" = "ami-0013ea6a76d3b8874"	# ebs-ssd, hvm
     }
 }
 locals {
