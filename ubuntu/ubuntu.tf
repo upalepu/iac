@@ -23,7 +23,7 @@ module "ubuntu" {
     key_name = "${var.key_name}"
     region = "${var.region}"
 	sg_ids = ["${module.myvpc.security_group}"]
-	subnet_id = "${module.myvpc.subnet}"
+	subnet_id = "${module.myvpc.subnets["subnet1"]}"
     ver = "${var.ver}"
     username = "${var.username}"
     root_volume = "${var.rootvol}"
