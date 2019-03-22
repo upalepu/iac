@@ -91,7 +91,7 @@ commands will detect it and remind you to do so if necessary.
 ubuntu@ubuntu:~/iac/ubuntu$ terraform apply
 ```
 
-The result as indicated below will be output showing the details of the EC2 machine created. This example was for three EC2 ubuntu machines. You can access the machines using SSH by either specifying the IP address or the Amazon EC2 name which looks like this - ***ec2-35-168-58-160.compute-1.amazonaws.com***.
+The result as indicated below will be output showing the details of the EC2 machine created. This example was for three EC2 ubuntu machines. You can access the machines using SSH by either specifying the IP address or the Amazon EC2 name which looks like this - ***ec2-54-158-185-96.compute-1.amazonaws.com***.
 
 ```bash
 Apply complete! Resources: 15 added, 0 changed, 0 destroyed.
@@ -99,31 +99,34 @@ Apply complete! Resources: 15 added, 0 changed, 0 destroyed.
 Outputs:
 
 ubuntu_info = {
-  ec2_info = map[public_dns_ip:map[ec2-35-168-58-160.compute-1.amazonaws.com:35.168.58.160
-  
-  ec2-34-200-250-108.compute-1.amazonaws.com:34.200.250.108 ec2-34-234-207-102.compute-1.amazonaws.com:34.234.207.102]
-  
-  root_volume:[[map[delete_on_termination:1 volume_size:15 volume_type:gp2 volume_id:vol-0894421517a872b2e iops:100]]
-  
-  [map[delete_on_termination:1 volume_size:15 iops:100 volume_id:vol-03ffa555a4eebccbe volume_type:gp2]] [map
-  
-  [volume_size:15 delete_on_termination:1 iops:100 volume_id:vol-0d4eb7d6ded45a5e4 volume_type:gp2]]]
-  
-  additional_volumes.device_names:[] additional_volumes.types:[] additional_volumes.sizes:[]]
-  
-  network_info = map[internet_gateway:igw-0184f4a7c178cb6e3 internet_access_cidr_block:0.0.0.0/0
-  
-  subnet:subnet-010f8049f1c38df87 subnet_cidr_block:10.0.1.0/24 security_group:sg-03bdd9f4f79c237a1
-  
-  vpc:vpc-04d46999e8a521fb3 internal_cidr_block:10.0.0.0/16]
+  ec2_info = map[public_dns_ip:map[ec2-54-158-185-96.compute-1.amazonaws.com:54.158.185.96] root_volume:[[map[volume_size:30 volume_type:gp2 delete_on_termination:1 iops:100 volume_id:vol-010d432a471e66f13]]] additional_volumes.device_names:[] additional_volumes.types:[] additional_volumes.sizes:[]]
+  network_info = map[security_group:sg-0bf49ebceb816d180 vpc:vpc-0fbf656f5035fd3e1 internal_cidr_block:10.0.0.0/16 internet_gateway:igw-0c45b91d96d6e31a1 internet_access_cidr_block:0.0.0.0/0 subnet:subnet-02cddfa96652bf43e subnet_cidr_block:10.0.1.0/24]
 }
 ```
 
-That's it! Your AWS EC2 ubuntu machine or machines are now created and ready for use. To verify that the machine is available, SSH into the machine from a bash command prompt and verify that the machine is up and running. Try and access the machine from your browser, using both the IP address and the Amazon EC2 address. What happens?
+That's it! Your AWS EC2 ubuntu machine or machines are now created and ready for use. To verify that the machine is available, SSH into the machine from a bash command prompt and verify that the machine is up and running. Try and access the machine from your browser, using both the IP address and the Amazon EC2 name. What happens?
 
-You should get an error indicating the system is unavailable. This is because you don't have a webserver installed on the machine. Now login to the machine using SSH and install a webserver and try to access the machine again from the browser. What do you see?
+The terraform script includes remote commands to install the nginx webserver on to the EC2 machine. If that install worked properly, you should see a page like below indicating that your EC2 machine has been created successfully and is accessible from the internet.
 
-You should be able to see the webserver welcome page. Play around some more and when you're done, go to the [Destroy](#destroy) section to destroy the AWS infrastructure you just created.
+```bash
+Welcome to nginx!
+If you see this page, the nginx web server is successfully installed and working. Further configuration is required.
+
+For online documentation and support please refer to nginx.org.
+Commercial support is available at nginx.com.
+
+Thank you for using nginx.
+```
+
+If you don't see a page like above, then SSH into the machine and from a bash command prompt, type the following command ...
+
+```bash
+ubuntu@ubuntu:~/iac/ubuntu$ sudo apt-get install -y nginx
+```
+
+The above command should install the ***nginx*** webserver on your machine. Now if you access the machine from your browser, you should be able to see the nginx "welcome" page.
+
+Play around some more and when you're done, go to the [Destroy](#destroy) section to destroy the AWS infrastructure you just created.
 
 ### <a name="destroy"></a>Destroy
 
@@ -152,7 +155,7 @@ Destroy complete! Resources: 15 destroyed.
 ubuntu@ubuntu:~/iac/ubuntu$
 ```
 
-That's it! Your AWS EC2 infrastructure - VPC & EC2 machine or machines have been destroyed. To verify that the machine is no longer available, try to SSH into the machine from a bash command prompt. You should get a timeout. Try and access the machine from your browser, using both the IP address and the Amazon EC2 address. You should get an error.
+That's it! Your AWS EC2 infrastructure - VPC & EC2 machine or machines have been destroyed. To verify that the machine is no longer available, try to SSH into the machine from a bash command prompt. You should get a timeout. Try and access the machine from your browser, using both the IP address and the Amazon EC2 address. You should get an error. You can also login to your AWS console and see that there are no additional resources in the system.
 
 ## Summary
 
