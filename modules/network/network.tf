@@ -37,10 +37,37 @@ resource "aws_route" "internet_access" {
 	gateway_id             = "${aws_internet_gateway.internet_gateway.id}"
 }
 
-# Create a subnet to launch our instances into
-resource "aws_subnet" "subnet" {
+# Create subnet 1 to launch our instances into
+resource "aws_subnet" "subnet1" {
 	vpc_id                  = "${aws_vpc.vpc.id}"
 	cidr_block              = "10.0.1.0/24"
+	map_public_ip_on_launch = true
+    tags {
+        Project = "${var.project}"
+    }
+}
+# Create subnet 2 to launch our instances into
+resource "aws_subnet" "subnet2" {
+	vpc_id                  = "${aws_vpc.vpc.id}"
+	cidr_block              = "10.0.2.0/24"
+	map_public_ip_on_launch = true
+    tags {
+        Project = "${var.project}"
+    }
+}
+# Create subnet 3 to launch our instances into
+resource "aws_subnet" "subnet3" {
+	vpc_id                  = "${aws_vpc.vpc.id}"
+	cidr_block              = "10.0.3.0/24"
+	map_public_ip_on_launch = true
+    tags {
+        Project = "${var.project}"
+    }
+}
+# Create subnet 4 to launch our instances into
+resource "aws_subnet" "subnet4" {
+	vpc_id                  = "${aws_vpc.vpc.id}"
+	cidr_block              = "10.0.4.0/24"
 	map_public_ip_on_launch = true
     tags {
         Project = "${var.project}"
@@ -124,8 +151,10 @@ output "network_info" {
 		internal_cidr_block = "${aws_vpc.vpc.cidr_block}"
 		internet_gateway = "${aws_internet_gateway.internet_gateway.id}"
 		internet_access_cidr_block = "${aws_route.internet_access.destination_cidr_block}"
-		subnet = "${aws_subnet.subnet.id}"
-		subnet_cidr_block = "${aws_subnet.subnet.cidr_block}"
+		subnet1_cidr_block = "${aws_subnet.subnet1.cidr_block}"
+		subnet2_cidr_block = "${aws_subnet.subnet2.cidr_block}"
+		subnet3_cidr_block = "${aws_subnet.subnet3.cidr_block}"
+		subnet4_cidr_block = "${aws_subnet.subnet4.cidr_block}"
 		security_group = "${aws_security_group.security_group.id}"
 	} 
 }
@@ -140,7 +169,12 @@ output "security_group" {
 	value = "${aws_security_group.security_group.id}"
 }
 
-output "subnet" {
-	description = "AWS Subnet."
-	value = "${aws_subnet.subnet.id}"
+output "subnets" {
+	description = "AWS VPC Subnets"
+	value = {
+		subnet1 = "${aws_subnet.subnet1.id}"
+		subnet2 = "${aws_subnet.subnet2.id}"
+		subnet3 = "${aws_subnet.subnet3.id}"
+		subnet4 = "${aws_subnet.subnet4.id}"
+	}
 }
