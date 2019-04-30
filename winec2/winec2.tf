@@ -21,7 +21,7 @@ module "winec2" {
 	admin_password = "${var.pwd}"
 	region = "${var.region}"
 	sg_ids = ["${module.myvpc.security_group}"]
-	subnet_id = "${module.myvpc.subnet}"
+	subnet_id = "${module.myvpc.subnets[0]}"
 	ver = "${var.ver}"
 	db = "${var.db}"
 	username = "${var.username}"
