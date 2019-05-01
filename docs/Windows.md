@@ -1,6 +1,7 @@
 # Infrastructure as Code - Windows EC2 on AWS
 
 The following instructions will enable you to create multiple Windows EC2 machines within a dedicated Virtual private Cloud (VPC) in AWS. You can also provision these machines with any applications you require. Terraform is capable of basic provisioning of your machines, but for advanced application provisioning, you will be better off using a dedicated provisioning or configuration management software like Octopus, Chef, Puppet, Ansible or Salt.
+NOTE: That you will likely incur some costs by using this terraform script as the windows machine types are not likely to be available in the free tier. As long as you take care to destroy the infrastructure after you're done, the charges will likely be small.
 
 <div class="twocol"></div>
 
@@ -37,7 +38,7 @@ If you are comfortable with using AWS in general you can consider changing some 
 The following steps are for those who are comfortable around AWS concepts. You can change any of the following parameters. See [Example Configuration](#advcfgex) below.
 
 - ***project*** is an AWS tag. The default is *demo-winec2*.
-- Default ***ec2_type*** is *t2.small*. If the machine will be used as a server, a *t2.medium* may be a better choice. For additional AWS machine types check [here.](https://aws.amazon.com/ec2/instance-types/)
+- Default ***ec2_type*** is *t2.xlarge*. If the machine will be used as a server, a *t2.2xlarge* may be a better choice. For additional AWS machine types check [here.](https://aws.amazon.com/ec2/instance-types/). If you are creating a machine with SQL Server, then you may need to use a *t3a.xlarge* or higher machine type. This could cost you some money. So make sure to destroy the machine when you're done.
 - The ***count*** variable needs to be set **only** if you want more than one EC2 machine to be created.
 - For Windows 2016 Server, nothing has to be set on the ***ver*** variable. Other valid values are *2012* & *2012R2*.
 - The ***db*** variable defaults to *none*, but valid values are *ssql* (Microsoft Standard SQL Server) and *esql* (Microsoft Enterprise SQL Server). When specifying these servers, make sure the root volume size is specified appropriately to accomodate the database needs.

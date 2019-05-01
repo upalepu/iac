@@ -72,7 +72,7 @@ DESCRIPTION
 
 variable "root_volume" {
 	description = "Root volume of the Windows EC2 instance"
-	default = { type = "gp2", size = 40, delete_on_termination = "true"  }
+	default = { type = "gp2", size = 60, delete_on_termination = "true"  }
 }
 
 variable "additional_volumes" {
@@ -117,14 +117,24 @@ NOTE: The AMIs in this list are all picked with the above attributes.
 DESCRIPTION
 
 	default = {
-		"2012R2-sqle-us-east-1" = "ami-75493d0f"
-		"2012R2-ssql-us-east-1" = "ami-eeb5c194"
-		"2012R2-esql-us-east-1" = "ami-ab4733d1"
-		"2012-none-us-east-1"   = "ami-455f2b3f"
-		"2012R2-none-us-east-1" = "ami-e443379e"
-		"2016-esql-us-east-1"   = "ami-63acd819"
-		"2016-ssql-us-east-1"   = "ami-b9a3d7c3"
-		"2016-none-us-east-1"   = "ami-4096e23a"
+		"2012R2-ssql-us-east-1" = "ami-058cfbc910c735dbf"
+		"2012R2-esql-us-east-1" = "ami-070ec27de05d06e71"
+		"2012R2-none-us-east-1" = "ami-0b6158cfa2ae7b493"
+		"2016-esql-us-east-1"   = "ami-0644d9f135284ca88"
+		"2016-ssql-us-east-1"   = "ami-05b632586043f1663"
+		"2016-none-us-east-1"   = "ami-0a9d418cd78849a6c"
+		"2019-none-us-east-1" = "ami-0204606704df03e7e"
+		"2019-ssql-us-east-1" = "ami-0e876724c7020a377"
+		"2019-esql-us-east-1" = "ami-0bbf266c213082bb2"
+		"2012R2-ssql-us-west-1" = "ami-0028cc9fee9893815"
+		"2012R2-esql-us-west-1" = "ami-0a07c9018bbf9c85f"
+		"2012R2-none-us-west-1" = "ami-0d4f8a9abc53cca9c"
+		"2016-esql-us-west-1"   = "ami-07f2c906675c55c37"
+		"2016-ssql-us-west-1"   = "ami-06087c0b9b94100b1"
+		"2016-none-us-west-1"   = "ami-0d089c9a817ea8b89"
+		"2019-none-us-west-1" = "ami-0349ec1b04afc2f46"
+		"2019-ssql-us-west-1" = "ami-0e8c4b97ebd30e24a"
+		"2019-esql-us-west-1" = "ami-0a0eac3072cc6959c"
 	}
 }
 
