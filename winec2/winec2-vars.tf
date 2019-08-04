@@ -3,7 +3,7 @@
 # Most commonly needed variable are included here. 
 # Changing the value in the variable will enable a different configuration to be created.
 # See individual variable descriptions for information on how to change variables. 
-variable "count" { default = 1 }
+variable "instances" { default = 1 }
 variable "project" { default = "demo-winec2" }
 variable "ec2_type" { default = "t2.xlarge" }
 variable "key_name" {}
