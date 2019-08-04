@@ -3,12 +3,8 @@
 # It assumes that the provider is specified in the calling parent
 # Multiple volumes can be attached to the created EC2
 
-provider "null" {
-	version = "~> 1.0"
-}
-
-variable "count" {
-	description = "Count of instances"
+variable "instances" {
+	description = "Number of instances"
 	default     = 1
 }
 
@@ -164,7 +160,7 @@ EOF
 }
 
 resource "aws_instance" "wec2" {
-	count                  = "${var.count}"
+	count                  = "${var.instances}"
 	instance_type          = "${var.instance_type}"
 	ami                    = "${lookup(var.amis,local.ami_key)}"
 	vpc_security_group_ids = ["${var.sg_ids}"]
@@ -189,7 +185,7 @@ resource "aws_instance" "wec2" {
 
 resource "null_resource" "wrcmd" {
 	depends_on = ["aws_instance.wec2", "null_resource.wfc"]
-	count      = "${var.count}"
+	count      = "${var.instances}"
 
 	triggers {
 		ec2_id = "${element(aws_instance.wec2.*.id,count.index)}"
@@ -213,7 +209,7 @@ resource "null_resource" "wrcmd" {
 
 locals {
 	_wfc_count        = "${length(var.files_to_copy)}"
-	wfc_count         = "${var.count > 0 ? (local._wfc_count * var.count) : 0 }" # No file copy if resource count is zero.
+	wfc_count         = "${var.instances > 0 ? (local._wfc_count * var.instances) : 0 }" # No file copy if resource count is zero.
 	wfc_count_divisor = "${local._wfc_count}"
 }
 
@@ -243,7 +239,7 @@ resource "null_resource" "wfc" {
 
 locals {
 	_addlvol_count        = "${length(var.additional_volumes)}"
-	addlvol_count         = "${var.count > 0 ? (local._addlvol_count * var.count) : 0 }" # No additional volumes if count is zero
+	addlvol_count         = "${var.instances > 0 ? (local._addlvol_count * var.instances) : 0 }" # No additional volumes if count is zero
 	addlvol_count_divisor = "${local._addlvol_count}"
 }
 

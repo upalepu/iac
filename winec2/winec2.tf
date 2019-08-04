@@ -14,7 +14,7 @@ module "myvpc" {
 }
 module "winec2" {
 	source = "../modules/wec2"
-	count = "${var.count}"
+	instances = "${var.instances}"
 	project = "${var.project}"
 	instance_type = "${var.ec2_type}"
 	key_name = "${var.key_name}"

@@ -3,9 +3,8 @@
 # It assumes that the provider is specified in the calling parent
 # Multiple volumes can be attached to the created EC2
 
-provider "null" { version = "~> 1.0"}
-variable "count" {
-    description = "Count of instances"
+variable "instances" {
+    description = "Number of instances"
     default = 1
 }
 variable "project" {
@@ -137,7 +136,7 @@ locals {
     ami_key = "${var.ver}-${var.region}"
 }
 resource "aws_instance" "ec2" {
-    count = "${var.count}"
+    count = "${var.instances}"
     instance_type = "${var.instance_type}"
     ami = "${lookup(var.amis,local.ami_key)}"
     vpc_security_group_ids = ["${var.sg_ids}"] 
@@ -158,7 +157,7 @@ resource "aws_instance" "ec2" {
 # Used for provisioning of linux commands.  
 resource "null_resource" "lrcmd" {
     depends_on = [ "aws_instance.ec2", "null_resource.lfcp" ]
-    count = "${var.count}"  
+    count = "${var.instances}"  
     triggers {
         ec2_id = "${element(aws_instance.ec2.*.id,count.index)}"
         filecopy = "${join(",",null_resource.lfcp.*.id)}" 
@@ -177,7 +176,7 @@ resource "null_resource" "lrcmd" {
 locals {
     _fcp = "${length(var.files_to_copy)}"
     _fcp_count = "${local._fcp > 0 ? length(var.files_to_copy) : 0 }"
-    fcp = "${var.count > 0 ? (local._fcp_count * var.count) : 0 }"    # No file copy if resource count is zero.
+    fcp = "${var.instances > 0 ? (local._fcp_count * var.instances) : 0 }"    # No file copy if resource count is zero.
     fcp_divisor = "${local._fcp_count}"
 }
 # Used for copying files to the EC2. Currently we use this on Linux only.  
@@ -201,7 +200,7 @@ resource "null_resource" "lfcp" {
 
 locals {
     _addlvol_count = "${length(var.additional_volumes)}" 
-    addlvol_count = "${var.count > 0 ? (local._addlvol_count * var.count) : 0 }" # No additional volumes if count is zero
+    addlvol_count = "${var.instances > 0 ? (local._addlvol_count * var.instances) : 0 }" # No additional volumes if count is zero
     addlvol_count_divisor = "${local._addlvol_count}"
 }
 # Used for creating additional volumes on the EC2. Data is supplied in the additional_volumes array

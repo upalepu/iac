@@ -2,10 +2,9 @@
 # The network module is used to setup a Basic VPC with SSH access
 # The ec2 module is used to create the EC2 and attach additional disks as necessary.
 # Basic level of provisioning can be done by uploading files and running rermote commands on the EC2 machine.
- provider "aws" {
-    region = "${var.region}"
-	version = "~> 1.6"
-}
+provider "aws" { region = "${var.region}", version = "~> 2.22.0" }
+provider "null" { version = "~> 2.1.2" }
+
 module "myvpc" {
 	source = "../modules/network"
     project = "${var.project}"
@@ -14,7 +13,7 @@ module "myvpc" {
 }
 module "ubuntu" {
     source = "../modules/ec2"
-    count = "${var.count}"
+    instances = "${var.instances}"
     project = "${var.project}"
     machine_name = "${var.project}-ec2"
     instance_type = "${var.ec2_type}"

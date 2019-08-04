@@ -10,7 +10,7 @@ variable "region" {	default = "us-east-1" }
 variable "project" { default = "demo-ubuntu" }
 variable "ec2_type" { default = "t2.small" }
 variable "ver" { default = "16" }
-variable "count" { default = "1" }
+variable "instances" { default = "1" }
 variable "username" { default = "ubuntu" }
 variable "rootvol" { default = { type = "gp2", size = "15", delete_on_termination = "true" } }
 variable "additional_volumes" { default = [] }
