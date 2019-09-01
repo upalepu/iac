@@ -8,7 +8,7 @@ env | grep -E "OS=" &>/dev/null # Check if we're running bash inside windows
 if (($?)); then 
     TERRAFORMINSTALLLOCATION="/usr/local/bin"; PLATFORM=linux; TERRAFORM=terraform; SUDOCMD=sudo
 else 
-    TERRAFORMINSTALLLOCATION="$HOME/bin"; PLATFORM=windows; TERRAFORM=terraform.exe
+    TERRAFORMINSTALLLOCATION="$HOME/.local/bin"; PLATFORM=windows; TERRAFORM=terraform.exe
 fi
 
 function finish() { # finish. This gets called when program exits (whether it is with error or normal exit)
