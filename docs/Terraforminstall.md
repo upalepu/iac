@@ -4,6 +4,10 @@ In order to use terraform as your infrastructure creator, it needs to be install
 
 Terraform is a single binary file and can easily be downloaded and installed. It is available for many operating systems. Check out details [here.](https://www.terraform.io/downloads.html)
 
+NOTE: This code has been tested with ***v0.11.x*** and not the latest ***v0.12.x***. Make sure you download the older version. Although it is likely that this code will work on the latest version of ***Terraform***, there are several steps to follow, so if you are a ***Terraform*** novice, I would strongly recommend sticking with ***v0.11.x***. If you know what you're doing, by all means go ahead.
+
+For more information on upgrading existing code to ***v0.12.x***, check out the instructions [here.](https://www.terraform.io/upgrade-guides/0-12.html)  
+
 ## Quick way to install Terraform on a 64-bit Linux machine  
 
 If you are using a local 64-bit (x86) Linux machine (not ARM), you can do the following steps to install the 64-bit Terraform binary to your machine.
