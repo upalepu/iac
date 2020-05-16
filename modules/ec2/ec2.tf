@@ -111,25 +111,24 @@ DESCRIPTION
         "12-us-west-1" = "ami-aeb99ece" # ebs-ssd, hvm
 #        "12-us-west-2" = "ami-830c94e3" # ebs, hvm
 #        "12-us-west-2" = "ami-fc0b939c" # ebs-io1, hvm
-        "12-us-east-2" = "ami-270f9747" # ebs-ssd, hvm
-#        "14-us-east-1" = "ami-0287bc2dcd65958a0" # ebs, hvm
-#        "14-us-east-1" = "ami-05087b409cedf1229" # ebs-io1, hvm
-        "14-us-east-1" = "ami-067d76d1273765ecf" # ebs-ssd, hvm
-#        "14-us-west-1" = "ami-0cb0e9fe779689eb3" # ebs, hvm
-#        "14-us-west-1" = "ami-0ab62b6e3bce367eb" # ebs-io1, hvm
-        "14-us-west-1" = "ami-0613abfb3a3791dae" # ebs-ssd, hvm
-#        "14-us-west-2" = "ami-0963cda75bb7f2605" # ebs, hvm
-#        "14-us-west-2" = "ami-0bf3da3a09b06a261" # ebs-io1, hvm
-        "14-us-west-2" = "ami-042122b99731161ed" # ebs-ssd, hvm
-        "16-us-east-1" = "ami-06d990a360d7a793c"	# ebs-ssd, hvm
-        "16-us-west-1" = "ami-0f1d0daf2937d0064"	# ebs-ssd, hvm
-        "16-us-west-2" = "ami-0b4a4b368aa8bd6f0"	# ebs-ssd, hvm
+#        "14-us-east-1" = "ami-07957d39ebba800d5" # ebs, hvm
+#        "14-us-east-1" = "ami-06b9259c69d8ed7f3" # ebs-io1, hvm
+        "14-us-east-1" = "ami-000b3a073fc20e415" # ebs-ssd, hvm
+#        "14-us-west-1" = "ami-0a40aea49c501581d" # ebs, hvm
+#        "14-us-west-1" = "ami-0037ca49b45845cbe" # ebs-io1, hvm
+        "14-us-west-1" = "ami-0430743863c514c80" # ebs-ssd, hvm
+#        "14-us-west-2" = "ami-038e6b679579b4ec1" # ebs, hvm
+#        "14-us-west-2" = "ami-001e998553e998c5c" # ebs-io1, hvm
+        "14-us-west-2" = "ami-0bac6fc47ad07c5f5" # ebs-ssd, hvm
+        "16-us-east-1" = "ami-03e33c1cefd1d3d74"	# ebs-ssd, hvm
+        "16-us-west-1" = "ami-0ee1a20d6b0c6a347"	# ebs-ssd, hvm
+        "16-us-west-2" = "ami-0813245c0939ab3ca"	# ebs-ssd, hvm
 #        "16-us-east-2" = "ami-be7753db"	# ebs-io1, hvm
-        "16-us-east-2" = "ami-0c8b8e32659017cc5"	# ebs-ssd, hvm
-        "18-us-east-1" = "ami-07025b83b4379007e"	# ebs-ssd, hvm
-        "18-us-west-1" = "ami-0ea0e2d21f93aa6c9"	# ebs-ssd, hvm
-        "18-us-east-2" = "ami-026f49896b1af2759"	# ebs-ssd, hvm
-        "18-us-west-2" = "ami-0013ea6a76d3b8874"	# ebs-ssd, hvm
+        "16-us-east-2" = "ami-07d9419c80dc1113c"	# ebs-ssd, hvm
+        "18-us-east-1" = "ami-05801d0a3c8e4c443"	# ebs-ssd, hvm
+        "18-us-west-1" = "ami-0365b50e7a63e3bf1"	# ebs-ssd, hvm
+        "18-us-east-2" = "ami-0a040c35ca945058a"	# ebs-ssd, hvm
+        "18-us-west-2" = "ami-06ffade19910cbfc0"	# ebs-ssd, hvm
     }
 }
 locals {
