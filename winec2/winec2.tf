@@ -4,7 +4,10 @@
 # Basic level of provisioning can be done by uploading files and running rermote commands on the EC2 machine.
 provider "null" { version = "~> 2.1.2" }
 provider "local" { version = "~> 1.3" }
-provider "aws" { region = "${var.region}", version = "~> 2.22.0" }
+provider "aws" { 
+	region = "${var.region}"
+	version = "~> 2.22.0" 
+}
 provider "template" { version = "~> 2.1" }
 
 module "myvpc" {

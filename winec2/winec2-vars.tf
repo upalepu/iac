@@ -12,11 +12,20 @@ variable "region" { default = "us-east-1" }
 variable "ver" { default = "2016" }
 variable "db" { default = "none" }
 variable "username" { default = "Administrator" }
-variable "rootvol" { type = "map", default = { type = "gp2", size = "60", delete_on_termination = "true" } }
-variable "additional_volumes" { type = "list", default = [] }
-variable "files_to_copy" { type = "list", default = [ { source = "../helpers/basiciis.ps1", destination = "c:\\basiciis.ps1" } ] }
+variable "rootvol" { 
+    type = "map"
+    default = { type = "gp2", size = "60", delete_on_termination = "true" } 
+}
+variable "additional_volumes" { 
+    type = "list"
+    default = [] 
+}
+variable "files_to_copy" { 
+    type = "list"
+    default = [ { source = "../helpers/basiciis.ps1", destination = "c:\\basiciis.ps1" } ] 
+}
 variable "remote_commands" { 
-    type = "list", 
+    type = "list" 
     default = [
         "cd c:\\",
         "powershell c:\\basiciis.ps1"
