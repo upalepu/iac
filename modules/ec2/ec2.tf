@@ -32,7 +32,6 @@ connect. Example: ~/.ssh/id_rsa.pub
 DESCRIPTION
 }
 variable "key_name" {
-    description = "Name of the AWS key to be used for access."
     description = <<DESCRIPTION
 Name of the AWS key to be used for access. This is usually created when a user is created 
 in the AWS account.
