@@ -2,7 +2,10 @@
 # Overrides defaults if provided by caller
 locals { _cfg = "${merge(var.def_cfg,var.cfg)}" }
 # Map argument for AWS Configuration Data. Supplied by caller. 
-variable "cfg" { description = "AWS Configuration Data", type = "map" }
+variable "cfg" { 
+    description = "AWS Configuration Data"
+    type = "map" 
+}
 # Default AWS Configuration data (profile, cli output, region, ide, secret etc.)
 variable "def_cfg" {
     type = "map"
